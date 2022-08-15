@@ -1,4 +1,4 @@
-package com.kuluruvineeth.socialnetwork.ui.theme
+package com.kuluruvineeth.socialnetwork.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

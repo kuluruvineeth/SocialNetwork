@@ -1,4 +1,4 @@
-package com.kuluruvineeth.socialnetwork
+package com.kuluruvineeth.socialnetwork.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.kuluruvineeth.socialnetwork.ui.theme.SocialNetworkTheme
+import com.kuluruvineeth.socialnetwork.presentation.ui.theme.SocialNetworkTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
