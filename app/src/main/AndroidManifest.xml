@@ -4,6 +4,7 @@
     package="com.kuluruvineeth.socialnetwork">
 
     <application
+        android:name=".SocialNetworkApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
