@@ -16,6 +16,10 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.unit.Constraints
+import com.kuluruvineeth.socialnetwork.presentation.util.Screen
+import com.kuluruvineeth.socialnetwork.util.Constants
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
@@ -37,6 +41,9 @@ fun SplashScreen(
                 }
             )
         )
+        delay(Constants.SPLASH_SCREEN_DURATION)
+        navController.popBackStack()
+        navController.navigate(Screen.LoginScreen.route)
     }
 
     Box(
