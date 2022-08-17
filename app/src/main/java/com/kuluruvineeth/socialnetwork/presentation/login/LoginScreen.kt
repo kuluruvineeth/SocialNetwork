@@ -15,10 +15,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardTextField
+import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceSmall
 
@@ -29,11 +31,16 @@ fun LoginScreen(
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
+            .padding(
+                start = spaceLarge,
+                end = spaceLarge,
+                top = spaceLarge,
+                bottom = 50.dp
+            )
     ){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = spaceMedium)
                 .align(Alignment.Center),
             verticalArrangement = Arrangement.Center
         ) {
@@ -42,7 +49,7 @@ fun LoginScreen(
                 style = MaterialTheme.typography.h1
             )
             Spacer(
-                modifier = Modifier.height(spaceSmall)
+                modifier = Modifier.height(spaceMedium)
             )
             StandardTextField(
                 text = viewModel.usernameText.value,
@@ -52,7 +59,7 @@ fun LoginScreen(
                 hint = stringResource(id = R.string.login_hint)
             )
             Spacer(
-                modifier = Modifier.height(spaceSmall)
+                modifier = Modifier.height(spaceMedium)
             )
             StandardTextField(
                 text = viewModel.passwordText.value,

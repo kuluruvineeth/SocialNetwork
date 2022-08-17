@@ -16,12 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.kuluruvineeth.socialnetwork.R
 
 @Composable
 fun StandardTextField(
+    modifier: Modifier = Modifier,
     text: String = "",
     hint: String = "",
+    maxLength: Int = 40,
     isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueChange: (String) -> Unit
@@ -35,7 +39,11 @@ fun StandardTextField(
 
     TextField(
         value = text, 
-        onValueChange = onValueChange,
+        onValueChange = {
+            if(it.length <= maxLength){
+                onValueChange(it)
+            }
+        },
         placeholder = {
             Text(
                 text = hint,
@@ -46,6 +54,11 @@ fun StandardTextField(
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
         ),
+        visualTransformation = if (!isPasswordVisible && isPasswordToggleDisplayed){
+            PasswordVisualTransformation()
+        }else{
+            VisualTransformation.None
+             },
         singleLine = true,
         trailingIcon = {
             if(isPasswordToggleDisplayed){
