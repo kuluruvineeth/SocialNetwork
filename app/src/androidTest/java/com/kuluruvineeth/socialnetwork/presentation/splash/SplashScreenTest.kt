@@ -14,6 +14,7 @@ import com.kuluruvineeth.socialnetwork.util.Constants
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Before
@@ -30,26 +31,31 @@ class SplashScreenTest{
     @RelaxedMockK
     lateinit var navController: NavController
 
+    private val testDispatcher = TestCoroutineDispatcher()
+
     @Before
     fun setUp(){
         MockKAnnotations.init(this)
     }
 
     @Test
-    fun splashScreen_displaysAndDisappears(){
+    fun splashScreen_displaysAndDisappears() = testDispatcher.runBlockingTest{
         composeTestRule.setContent {
             SocialNetworkTheme {
-                SplashScreen(navController = navController)
+                SplashScreen(
+                    navController = navController,
+                    dispatcher = testDispatcher
+                )
             }
         }
         composeTestRule
             .onNodeWithContentDescription("Logo")
             .assertExists()
 
-        /*advanceTimeBy(Constants.SPLASH_SCREEN_DURATION)
+        advanceTimeBy(Constants.SPLASH_SCREEN_DURATION)
         verify {
             navController.popBackStack()
             navController.navigate(Screen.LoginScreen.route)
-        }*/
+        }
     }
 }
