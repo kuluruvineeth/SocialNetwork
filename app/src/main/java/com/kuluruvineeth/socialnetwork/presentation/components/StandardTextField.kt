@@ -79,12 +79,12 @@ fun StandardTextField(
                         }else{
                             Icons.Filled.Visibility
                              },
+                        tint = Color.White,
                         contentDescription = if(isPasswordVisible){
                             stringResource(id = R.string.password_visible_content_description)
                         }else{
                             stringResource(id = R.string.password_hidden_content_description)
                         },
-                        tint = Color.LightGray
                     )
                 }
             }
