@@ -1,5 +1,6 @@
 package com.kuluruvineeth.socialnetwork.presentation.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -24,6 +25,7 @@ import com.kuluruvineeth.socialnetwork.presentation.components.StandardTextField
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceSmall
+import com.kuluruvineeth.socialnetwork.presentation.util.Screen
 
 @Composable
 fun LoginScreen(
@@ -79,7 +81,9 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(spaceMedium))
             Button(
-                onClick = {  },
+                onClick = {
+                          navController.navigate(Screen.MainFeedScreen.route)
+                },
                 modifier = Modifier
                     .align(Alignment.End)
             ) {
@@ -104,6 +108,11 @@ fun LoginScreen(
             style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
+                .clickable {
+                    navController.navigate(
+                        Screen.RegisterScreen.route
+                    )
+                }
         )
     }
 
