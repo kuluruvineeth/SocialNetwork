@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.outlined.*
@@ -30,9 +31,10 @@ private val bottomNavItemsList = listOf(
         icon = Icons.Outlined.Message,
         contentDescription = "Message"
     ),
+    BottomNavItem(route=""),
     BottomNavItem(
         route = Screen.ActivityScreen.route,
-        icon = Icons.Outlined.Doorbell,
+        icon = Icons.Outlined.Notifications,
         contentDescription = "Activity"
     ),
     BottomNavItem(
@@ -50,6 +52,7 @@ fun StandardScaffold(
     showBottomBar: Boolean = true,
     viewModel: StandardScaffoldViewModel = hiltViewModel(),
     bottomNavItems: List<BottomNavItem> = bottomNavItemsList,
+    onFabClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -68,15 +71,33 @@ fun StandardScaffold(
                                 contentDescription = bottomNavItem.contentDescription,
                                 selected = bottomNavItem.route == navController.currentDestination?.route,
                                 alertCount = bottomNavItem.alertCount,
+                                enabled = bottomNavItem.icon != null
                             ) {
                                 //viewModel.setSelectedBottomNavItem(i)
-                                navController.navigate(bottomNavItem.route)
+                                if(navController.currentDestination?.route != bottomNavItem.route){
+                                    navController.navigate(bottomNavItem.route)
+                                }
                             }
                         }
                     }
                 }
             }
         },
+        floatingActionButton = {
+            if(showBottomBar){
+                FloatingActionButton(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    onClick = onFabClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.add_post)
+                    )
+                }
+            }
+        },
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center,
         modifier = modifier
     ) {
         content()

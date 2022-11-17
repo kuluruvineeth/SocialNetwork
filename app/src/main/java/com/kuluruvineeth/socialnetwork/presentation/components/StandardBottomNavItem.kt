@@ -1,5 +1,7 @@
 package com.kuluruvineeth.socialnetwork.presentation.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -27,7 +29,7 @@ import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceSmall
 fun RowScope.StandardBottomNavItem(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    icon: ImageVector,
+    icon: ImageVector? = null,
     selected: Boolean = false,
     alertCount: Int? = null,
     selectedColor: Color = MaterialTheme.colors.primary,
@@ -38,6 +40,12 @@ fun RowScope.StandardBottomNavItem(
     if(alertCount != null && alertCount < 0){
         throw IllegalArgumentException("Alert count can't be negative")
     }
+    val lineLength = animateFloatAsState(
+        targetValue = if(selected) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 300
+        )
+    )
     BottomNavigationItem(
         selected = selected,
         onClick = onClick,
@@ -51,26 +59,34 @@ fun RowScope.StandardBottomNavItem(
                     .fillMaxSize()
                     .padding(spaceSmall)
                     .drawBehind {
-                        if(selected){
+                        if (selected) {
                             drawLine(
                                 color = if (selected) {
                                     selectedColor
                                 } else {
                                     unselectedColor
                                 },
-                                start = Offset(size.width/2f - 15.dp.toPx(), size.height),
-                                end = Offset(size.width/2f + 15.dp.toPx(), size.height),
+                                start = Offset(
+                                    size.width / 2f - lineLength.value * 15.dp.toPx(),
+                                    size.height
+                                ),
+                                end = Offset(
+                                    size.width / 2f + lineLength.value * 15.dp.toPx(),
+                                    size.height
+                                ),
                                 strokeWidth = 2.dp.toPx(),
                                 cap = StrokeCap.Round
                             )
                         }
                     }
             ){
-                Icon(
-                    imageVector = icon,
-                    contentDescription = contentDescription,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                if(icon != null){
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = contentDescription,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
                 if(alertCount != null){
                     val alertText = if(alertCount > 99){
                         "99+"

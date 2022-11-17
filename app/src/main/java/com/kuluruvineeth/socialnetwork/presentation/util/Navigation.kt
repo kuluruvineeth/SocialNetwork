@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kuluruvineeth.socialnetwork.presentation.MainFeedScreen
 import com.kuluruvineeth.socialnetwork.presentation.activity.ActivityScreen
 import com.kuluruvineeth.socialnetwork.presentation.chat.ChatScreen
+import com.kuluruvineeth.socialnetwork.presentation.create_post.CreatePostScreen
 import com.kuluruvineeth.socialnetwork.presentation.login.LoginScreen
 import com.kuluruvineeth.socialnetwork.presentation.profile.ProfileScreen
 import com.kuluruvineeth.socialnetwork.presentation.register.RegisterScreen
@@ -42,6 +43,9 @@ fun Navigation(
         }
         composable(Screen.ActivityScreen.route){
             ActivityScreen(navController = navController)
+        }
+        composable(Screen.CreatePostScreen.route){
+            CreatePostScreen(navController = navController)
         }
     }
 }
