@@ -1,8 +1,15 @@
 package com.kuluruvineeth.socialnetwork.presentation
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.kuluruvineeth.socialnetwork.presentation.components.Post
+import com.kuluruvineeth.socialnetwork.presentation.components.StandardScaffold
 
 @Composable
 fun MainFeedScreen(
