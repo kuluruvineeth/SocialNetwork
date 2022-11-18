@@ -24,4 +24,6 @@
     <string name="activity">Activity</string>
     <string name="profile">Profile</string>
     <string name="add_post">Add Post</string>
+    <string name="back">Navigate back</string>
+    <string name="your_feed">Your Feed</string>
 </resources>

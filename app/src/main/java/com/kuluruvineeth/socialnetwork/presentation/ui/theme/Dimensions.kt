@@ -5,3 +5,6 @@ import androidx.compose.ui.unit.dp
 val spaceSmall = 8.dp
 val spaceMedium = 16.dp
 val spaceLarge = 24.dp
+
+val ProfilePictureSize = 75.dp
+val ProfilePictureSizeSmall = 30.dp

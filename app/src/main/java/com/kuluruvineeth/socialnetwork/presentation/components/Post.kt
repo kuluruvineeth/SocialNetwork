@@ -13,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +42,7 @@ import com.kuluruvineeth.socialnetwork.util.Constants
 @Composable
 fun Post(
     post: Post,
-    profilePictureSize: Dp = 75.dp
+    onPostClick : () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -51,10 +52,13 @@ fun Post(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = profilePictureSize / 2f)
+                .offset(y = ProfilePictureSize / 2f)
                 .clip(MaterialTheme.shapes.medium)
                 .shadow(5.dp)
                 .background(MediumGray)
+                .clickable {
+                    onPostClick()
+                }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.bullocks),
@@ -133,7 +137,7 @@ fun Post(
             contentDescription = "Profile picture",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(profilePictureSize)
+                .size(ProfilePictureSize)
                 .clip(CircleShape)
                 .align(Alignment.TopCenter)
         )
@@ -191,7 +195,7 @@ fun EngagementButtons(
             modifier = Modifier.size(iconSize)
         ) {
             Icon(
-                imageVector = Icons.Filled.Favorite,
+                imageVector = Icons.Filled.Share,
                 contentDescription = stringResource(id = R.string.share)
             )
         }
