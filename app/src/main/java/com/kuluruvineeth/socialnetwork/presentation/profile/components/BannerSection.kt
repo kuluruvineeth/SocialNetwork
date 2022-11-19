@@ -30,7 +30,8 @@ import com.kuluruvineeth.socialnetwork.presentation.util.toPx
 fun BannerSection(
     modifier: Modifier = Modifier,
     imageModifier: Modifier = Modifier,
-    iconSize: Dp = 30.dp,
+    iconSize: Dp = 35.dp,
+    iconModifier: Modifier = Modifier,
     onGithubClick: () -> Unit = {},
     onKotlinClick: () -> Unit = {},
     onLinkedInClick: () -> Unit = {}
@@ -59,7 +60,7 @@ fun BannerSection(
                 )
         )
         Row(
-            modifier = Modifier
+            modifier = iconModifier
                 .height(iconSize)
                 .align(Alignment.BottomStart)
                 .padding(spaceSmall)
@@ -81,7 +82,7 @@ fun BannerSection(
             )
         }
         Row(
-            modifier = Modifier
+            modifier = iconModifier
                 .height(iconSize)
                 .align(Alignment.BottomEnd)
                 .padding(spaceSmall)

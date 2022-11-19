@@ -53,15 +53,24 @@ import kotlin.random.Random
 fun ProfileScreen(
     navController: NavController
 ) {
+    val lazyListState = rememberLazyListState()
     var toolbarOffsetY by remember {
         mutableStateOf(0f)
     }
-
-
+    var totalToolbarOffsetY by remember {
+        mutableStateOf(0f)
+    }
+    val isFirstItemVisible = lazyListState.firstVisibleItemIndex == 0
+    println("SCROLLED DOWN $isFirstItemVisible")
+    println("TOOLBAR Offset $toolbarOffsetY")
+    val iconSizeExpanded = 35.dp
 
     val toolbarHeightCollapsed = 75.dp
     val imageCollapsedOffsetY = remember {
         (toolbarHeightCollapsed - ProfilePictureSizeLarge/2f)/2f
+    }
+    val iconCollapsedOffsetY = remember {
+        (toolbarHeightCollapsed - iconSizeExpanded) / 2f
     }
     val bannerHeight =
         (LocalConfiguration.current.screenWidthDp / 2.5f).dp
@@ -78,11 +87,15 @@ fun ProfileScreen(
         object : NestedScrollConnection{
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 val delta = available.y
+                if(delta > 0f && lazyListState.firstVisibleItemIndex != 0){
+                    return Offset.Zero
+                }
                 val newOffset = toolbarOffsetY + delta
                 toolbarOffsetY = newOffset.coerceIn(
                     minimumValue = -maxOffset.toPx(),
                     maximumValue = 0f
                 )
+                totalToolbarOffsetY += toolbarOffsetY
                 expandedRatio = ((toolbarOffsetY + maxOffset.toPx()) /maxOffset.toPx() )
                 println("EXPANDED RATIO: $expandedRatio")
                 return Offset.Zero
@@ -96,6 +109,7 @@ fun ProfileScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
+            state = lazyListState
         ){
             item{
                 Spacer(modifier = Modifier.height(
@@ -147,7 +161,12 @@ fun ProfileScreen(
                             minimumValue = toolbarHeightCollapsed,
                             maximumValue = bannerHeight
                         )
-                    )
+                    ),
+                iconModifier = Modifier
+                    .graphicsLayer {
+                        translationY = (1f - expandedRatio) *
+                                -iconCollapsedOffsetY.toPx()
+                    }
             )
             Image(
                 painter = painterResource(id = R.drawable.vineeth),
@@ -166,13 +185,13 @@ fun ProfileScreen(
                         scaleX = scale
                         scaleY = scale
                     }
-                            .size(ProfilePictureSizeLarge)
-                            .clip(CircleShape)
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colors.onSurface,
-                                shape = CircleShape
-                            )
+                    .size(ProfilePictureSizeLarge)
+                    .clip(CircleShape)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.onSurface,
+                        shape = CircleShape
+                    )
             )
         }
     }
