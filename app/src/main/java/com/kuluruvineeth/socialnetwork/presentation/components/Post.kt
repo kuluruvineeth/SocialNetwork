@@ -42,17 +42,21 @@ import com.kuluruvineeth.socialnetwork.util.Constants
 @Composable
 fun Post(
     post: Post,
+    modifier: Modifier = Modifier,
+    showProfileImage: Boolean = true,
     onPostClick : () -> Unit = {}
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(spaceMedium)
     ){
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = ProfilePictureSize / 2f)
+                .offset(y = if(showProfileImage){
+                    ProfilePictureSizeMedium / 2f
+                } else 0.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .shadow(5.dp)
                 .background(MediumGray)
@@ -132,15 +136,17 @@ fun Post(
             }
 
         }
-        Image(
-            painter = painterResource(id = R.drawable.vineeth),
-            contentDescription = "Profile picture",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(ProfilePictureSize)
-                .clip(CircleShape)
-                .align(Alignment.TopCenter)
-        )
+        if(showProfileImage){
+            Image(
+                painter = painterResource(id = R.drawable.vineeth),
+                contentDescription = "Profile picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(ProfilePictureSize)
+                    .clip(CircleShape)
+                    .align(Alignment.TopCenter)
+            )
+        }
     }
 }
 
