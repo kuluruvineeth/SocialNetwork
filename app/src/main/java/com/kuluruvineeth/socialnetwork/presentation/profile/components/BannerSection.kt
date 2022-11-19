@@ -2,20 +2,26 @@ package com.kuluruvineeth.socialnetwork.presentation.profile.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kuluruvineeth.socialnetwork.R
+import com.kuluruvineeth.socialnetwork.presentation.ui.theme.ProfilePictureSizeLarge
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.presentation.util.toPx
@@ -23,6 +29,7 @@ import com.kuluruvineeth.socialnetwork.presentation.util.toPx
 @Composable
 fun BannerSection(
     modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier,
     iconSize: Dp = 30.dp,
     onGithubClick: () -> Unit = {},
     onKotlinClick: () -> Unit = {},
@@ -34,7 +41,8 @@ fun BannerSection(
         Image(
             painter = painterResource(id = R.drawable.channelart),
             contentDescription = stringResource(id = R.string.banner_image),
-            modifier = modifier
+            contentScale = ContentScale.Crop,
+            modifier = imageModifier
                 .fillMaxSize()
         )
         Box(
