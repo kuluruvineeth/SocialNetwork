@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -25,6 +26,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.kuluruvineeth.socialnetwork.R
@@ -42,6 +44,8 @@ import com.kuluruvineeth.socialnetwork.presentation.ui.theme.ProfilePictureSizeL
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.presentation.util.Screen
+import com.kuluruvineeth.socialnetwork.presentation.util.toDp
+import com.kuluruvineeth.socialnetwork.presentation.util.toPx
 import me.onebone.toolbar.*
 import kotlin.random.Random
 
@@ -52,18 +56,36 @@ fun ProfileScreen(
     var toolbarOffsetY by remember {
         mutableStateOf(0f)
     }
-    val toolbarHeightCollapsed = 56.dp
+
+
+
+    val toolbarHeightCollapsed = 75.dp
+    val imageCollapsedOffsetY = remember {
+        (toolbarHeightCollapsed - ProfilePictureSizeLarge/2f)/2f
+    }
     val bannerHeight =
         (LocalConfiguration.current.screenWidthDp / 2.5f).dp
     val toolbarHeightExpanded = remember{
         bannerHeight + ProfilePictureSizeLarge
+    }
+    val maxOffset = remember {
+        toolbarHeightExpanded - toolbarHeightCollapsed
+    }
+    var expandedRatio by remember {
+        mutableStateOf(1f)
     }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection{
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 val delta = available.y
                 val newOffset = toolbarOffsetY + delta
-                return super.onPreScroll(available, source)
+                toolbarOffsetY = newOffset.coerceIn(
+                    minimumValue = -maxOffset.toPx(),
+                    maximumValue = 0f
+                )
+                expandedRatio = ((toolbarOffsetY + maxOffset.toPx()) /maxOffset.toPx() )
+                println("EXPANDED RATIO: $expandedRatio")
+                return Offset.Zero
             }
         }
     }
@@ -119,7 +141,13 @@ fun ProfileScreen(
                 .align(Alignment.TopCenter)
         ) {
             BannerSection(
-                modifier = Modifier.height(bannerHeight)
+                modifier = Modifier
+                    .height(
+                        (bannerHeight * expandedRatio).coerceIn(
+                            minimumValue = toolbarHeightCollapsed,
+                            maximumValue = bannerHeight
+                        )
+                    )
             )
             Image(
                 painter = painterResource(id = R.drawable.vineeth),
@@ -128,15 +156,23 @@ fun ProfileScreen(
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .graphicsLayer {
-                        translationY = -ProfilePictureSizeLarge.toPx() / 2f
+                        translationY = -ProfilePictureSizeLarge.toPx() / 2f -
+                                (1f - expandedRatio) * imageCollapsedOffsetY.toPx()
+                        transformOrigin = TransformOrigin(
+                            pivotFractionX = 0.5f,
+                            pivotFractionY = 0f
+                        )
+                        val scale = 0.5f + expandedRatio * 0.5f
+                        scaleX = scale
+                        scaleY = scale
                     }
-                    .size(ProfilePictureSizeLarge)
-                    .clip(CircleShape)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colors.onSurface,
-                        shape = CircleShape
-                    )
+                            .size(ProfilePictureSizeLarge)
+                            .clip(CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colors.onSurface,
+                                shape = CircleShape
+                            )
             )
         }
     }
