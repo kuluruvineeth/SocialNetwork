@@ -57,6 +57,13 @@ fun ProfileScreen(
     var toolbarOffsetY by remember {
         mutableStateOf(0f)
     }
+    var iconGroupWidth by remember {
+        mutableStateOf(0)
+    }
+    var iconHorizontalCenterLength =
+        (LocalConfiguration.current.screenWidthDp.dp.toPx() / 4f -
+                (ProfilePictureSizeLarge/4f).toPx() -
+                spaceSmall.toPx())/2f
     var totalToolbarOffsetY by remember {
         mutableStateOf(0f)
     }
@@ -162,11 +169,21 @@ fun ProfileScreen(
                             maximumValue = bannerHeight
                         )
                     ),
-                iconModifier = Modifier
+                leftIconModifier = Modifier
                     .graphicsLayer {
                         translationY = (1f - expandedRatio) *
                                 -iconCollapsedOffsetY.toPx()
-                    }
+                        translationX = (1f - expandedRatio) *
+                                iconHorizontalCenterLength
+
+                    },
+                rightIconModifier = Modifier
+                    .graphicsLayer {
+                        translationY = (1f - expandedRatio) *
+                                -iconCollapsedOffsetY.toPx()
+                        translationX = (1f - expandedRatio) *
+                                -iconHorizontalCenterLength
+                    },
             )
             Image(
                 painter = painterResource(id = R.drawable.vineeth),

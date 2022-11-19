@@ -13,9 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -31,7 +33,8 @@ fun BannerSection(
     modifier: Modifier = Modifier,
     imageModifier: Modifier = Modifier,
     iconSize: Dp = 35.dp,
-    iconModifier: Modifier = Modifier,
+    leftIconModifier: Modifier = Modifier,
+    rightIconModifier: Modifier = Modifier,
     onGithubClick: () -> Unit = {},
     onKotlinClick: () -> Unit = {},
     onLinkedInClick: () -> Unit = {}
@@ -60,7 +63,7 @@ fun BannerSection(
                 )
         )
         Row(
-            modifier = iconModifier
+            modifier = leftIconModifier
                 .height(iconSize)
                 .align(Alignment.BottomStart)
                 .padding(spaceSmall)
@@ -81,8 +84,9 @@ fun BannerSection(
                 modifier = Modifier.size(iconSize)
             )
         }
+
         Row(
-            modifier = iconModifier
+            modifier = rightIconModifier
                 .height(iconSize)
                 .align(Alignment.BottomEnd)
                 .padding(spaceSmall)
