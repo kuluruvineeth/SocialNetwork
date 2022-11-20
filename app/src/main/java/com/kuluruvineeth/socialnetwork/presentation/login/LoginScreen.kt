@@ -75,7 +75,7 @@ fun LoginScreen(
                 hint = stringResource(id = R.string.password_hint),
                 keyboardType = KeyboardType.Password,
                 error = viewModel.passwordError.value,
-                showPasswordToggle = viewModel.showPassword.value,
+                isPasswordVisible = viewModel.showPassword.value,
                 onPasswordToggleClick = {
                     viewModel.setShowPassword(it)
                 }

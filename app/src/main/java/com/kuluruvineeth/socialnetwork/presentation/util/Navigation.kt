@@ -11,6 +11,7 @@ import com.kuluruvineeth.socialnetwork.presentation.MainFeedScreen
 import com.kuluruvineeth.socialnetwork.presentation.activity.ActivityScreen
 import com.kuluruvineeth.socialnetwork.presentation.chat.ChatScreen
 import com.kuluruvineeth.socialnetwork.presentation.create_post.CreatePostScreen
+import com.kuluruvineeth.socialnetwork.presentation.edit_profile.EditProfileScreen
 import com.kuluruvineeth.socialnetwork.presentation.login.LoginScreen
 import com.kuluruvineeth.socialnetwork.presentation.post_detail.PostDetailScreen
 import com.kuluruvineeth.socialnetwork.presentation.profile.ProfileScreen
@@ -48,6 +49,9 @@ fun Navigation(
         }
         composable(Screen.CreatePostScreen.route){
             CreatePostScreen(navController = navController)
+        }
+        composable(Screen.EditProfileScreen.route){
+            EditProfileScreen(navController = navController)
         }
         composable(Screen.PostDetailScreen.route){
             PostDetailScreen(

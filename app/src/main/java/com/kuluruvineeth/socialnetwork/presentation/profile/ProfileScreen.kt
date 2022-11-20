@@ -26,8 +26,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.domain.models.Activity
@@ -40,29 +42,29 @@ import com.kuluruvineeth.socialnetwork.presentation.components.StandardScaffold
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
 import com.kuluruvineeth.socialnetwork.presentation.profile.components.BannerSection
 import com.kuluruvineeth.socialnetwork.presentation.profile.components.ProfileHeaderSection
-import com.kuluruvineeth.socialnetwork.presentation.ui.theme.ProfilePictureSizeLarge
+import com.kuluruvineeth.socialnetwork.presentation.ui.theme.ProfilePictureSize
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.presentation.util.Screen
 import com.kuluruvineeth.socialnetwork.presentation.util.toDp
 import com.kuluruvineeth.socialnetwork.presentation.util.toPx
-import me.onebone.toolbar.*
 import kotlin.random.Random
 
 @Composable
 fun ProfileScreen(
-    navController: NavController
+    navController: NavController,
+    profilePictureSize: Dp = ProfilePictureSize,
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val lazyListState = rememberLazyListState()
-    var toolbarOffsetY by remember {
-        mutableStateOf(0f)
-    }
+    var toolbarOffsetY = viewModel.toolbarOffsetY.value
+    var expandedRatio = viewModel.expandedRatio.value
     var iconGroupWidth by remember {
         mutableStateOf(0)
     }
     var iconHorizontalCenterLength =
         (LocalConfiguration.current.screenWidthDp.dp.toPx() / 4f -
-                (ProfilePictureSizeLarge/4f).toPx() -
+                (ProfilePictureSize/4f).toPx() -
                 spaceSmall.toPx())/2f
     var totalToolbarOffsetY by remember {
         mutableStateOf(0f)
@@ -74,7 +76,7 @@ fun ProfileScreen(
 
     val toolbarHeightCollapsed = 75.dp
     val imageCollapsedOffsetY = remember {
-        (toolbarHeightCollapsed - ProfilePictureSizeLarge/2f)/2f
+        (toolbarHeightCollapsed - ProfilePictureSize/2f)/2f
     }
     val iconCollapsedOffsetY = remember {
         (toolbarHeightCollapsed - iconSizeExpanded) / 2f
@@ -82,13 +84,10 @@ fun ProfileScreen(
     val bannerHeight =
         (LocalConfiguration.current.screenWidthDp / 2.5f).dp
     val toolbarHeightExpanded = remember{
-        bannerHeight + ProfilePictureSizeLarge
+        bannerHeight + ProfilePictureSize
     }
     val maxOffset = remember {
         toolbarHeightExpanded - toolbarHeightCollapsed
-    }
-    var expandedRatio by remember {
-        mutableStateOf(1f)
     }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection{
@@ -120,7 +119,7 @@ fun ProfileScreen(
         ){
             item{
                 Spacer(modifier = Modifier.height(
-                    toolbarHeightExpanded - ProfilePictureSizeLarge / 2f
+                    toolbarHeightExpanded - ProfilePictureSize / 2f
                 ))
             }
             item {
@@ -133,7 +132,9 @@ fun ProfileScreen(
                         followingCount = 534,
                         postCount = 65
                     )
-                )
+                ){
+                    navController.navigate(Screen.EditProfileScreen.route)
+                }
             }
             items(20){
                 Spacer(
@@ -192,7 +193,7 @@ fun ProfileScreen(
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .graphicsLayer {
-                        translationY = -ProfilePictureSizeLarge.toPx() / 2f -
+                        translationY = -ProfilePictureSize.toPx() / 2f -
                                 (1f - expandedRatio) * imageCollapsedOffsetY.toPx()
                         transformOrigin = TransformOrigin(
                             pivotFractionX = 0.5f,
@@ -202,7 +203,7 @@ fun ProfileScreen(
                         scaleX = scale
                         scaleY = scale
                     }
-                    .size(ProfilePictureSizeLarge)
+                    .size(ProfilePictureSize)
                     .clip(CircleShape)
                     .border(
                         width = 1.dp,
