@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kuluruvineeth.socialnetwork.domain.models.Post
 import com.kuluruvineeth.socialnetwork.presentation.MainFeedScreen
+import com.kuluruvineeth.socialnetwork.presentation.PersonListScreen
 import com.kuluruvineeth.socialnetwork.presentation.activity.ActivityScreen
 import com.kuluruvineeth.socialnetwork.presentation.chat.ChatScreen
 import com.kuluruvineeth.socialnetwork.presentation.create_post.CreatePostScreen
@@ -53,6 +54,9 @@ fun Navigation(
         }
         composable(Screen.EditProfileScreen.route){
             EditProfileScreen(navController = navController)
+        }
+        composable(Screen.PersonListScreen.route){
+            PersonListScreen(navController = navController)
         }
         composable(Screen.SearchScreen.route){
             SearchScreen(navController = navController)
