@@ -46,4 +46,10 @@
     <string name="linked_in_profile_url">linkedin profile url</string>
     <string name="your_bio">your bio</string>
     <string name="select_top_3_skills">select top 3 skills</string>
+    <string name="search_for_users">search for users</string>
+    <string name="search">search</string>
+    <string name="create_a_new_post">create a new post</string>
+    <string name="choose_image">choose image</string>
+    <string name="description">description</string>
+    <string name="post">post</string>
 </resources>
