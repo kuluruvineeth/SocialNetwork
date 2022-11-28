@@ -44,10 +44,12 @@ fun ActivityItem(
             val fillerText = when(activity.actionType){
                 is ActivityAction.LikedPost -> stringResource(id = R.string.liked)
                 is ActivityAction.CommentedOnPost -> stringResource(id = R.string.commented_on)
+                is ActivityAction.FollowedYou -> stringResource(id = R.string.followed_you)
             }
             val actionText = when(activity.actionType){
                 is ActivityAction.LikedPost -> stringResource(id = R.string.your_post)
                 is ActivityAction.CommentedOnPost -> stringResource(id = R.string.your_post)
+                is ActivityAction.FollowedYou -> ""
             }
             Text(
                 text = buildAnnotatedString {
