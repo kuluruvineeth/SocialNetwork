@@ -15,15 +15,12 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.kuluruvineeth.socialnetwork.presentation.MainActivity
-import com.kuluruvineeth.socialnetwork.presentation.login.LoginScreen
-import com.kuluruvineeth.socialnetwork.presentation.util.TestTags.PASSWORD_TOGGLE
-import com.kuluruvineeth.socialnetwork.presentation.util.TestTags.STANDARD_TEXT_FIELD
-import org.junit.Assert.*
+import com.kuluruvineeth.socialnetwork.core.presentation.MainActivity
+import com.kuluruvineeth.socialnetwork.core.util.TestTags.PASSWORD_TOGGLE
+import com.kuluruvineeth.socialnetwork.core.util.TestTags.STANDARD_TEXT_FIELD
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.exp
 
 @RunWith(AndroidJUnit4::class)
 class StandardTextFieldTest{

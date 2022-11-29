@@ -1,22 +1,18 @@
 package com.kuluruvineeth.socialnetwork.presentation.splash
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import com.kuluruvineeth.socialnetwork.presentation.MainActivity
-import com.kuluruvineeth.socialnetwork.presentation.ui.theme.SocialNetworkTheme
-import com.kuluruvineeth.socialnetwork.presentation.util.Screen
-import com.kuluruvineeth.socialnetwork.util.Constants
+import com.kuluruvineeth.socialnetwork.core.presentation.MainActivity
+import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.SocialNetworkTheme
+import com.kuluruvineeth.socialnetwork.core.util.Screen
+import com.kuluruvineeth.socialnetwork.core.util.Constants
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
