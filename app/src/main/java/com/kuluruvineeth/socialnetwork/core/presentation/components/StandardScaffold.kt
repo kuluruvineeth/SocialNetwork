@@ -46,6 +46,7 @@ fun StandardScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
+    state: ScaffoldState,
     bottomNavItems: List<BottomNavItem> = bottomNavItemsList,
     onFabClick: () -> Unit = {},
     content: @Composable () -> Unit
@@ -78,6 +79,7 @@ fun StandardScaffold(
                 }
             }
         },
+        scaffoldState = state,
         floatingActionButton = {
             if(showBottomBar){
                 FloatingActionButton(
