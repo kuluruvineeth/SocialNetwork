@@ -23,6 +23,7 @@ import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardTextField
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
+import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.feature_auth.presentation.util.AuthError
@@ -42,14 +43,14 @@ fun LoginScreen(
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                is LoginViewModel.UiEvent.SnackbarEvent -> {
+                is UiEvent.SnackbarEvent -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText.asString(
                             context
                         )
                     )
                 }
-                is LoginViewModel.UiEvent.Navigate -> {
+                is UiEvent.Navigate -> {
                     navController.navigate(event.route)
                 }
             }

@@ -20,6 +20,7 @@ import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardTextField
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
+import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
 import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.UiText
@@ -40,7 +41,7 @@ fun RegisterScreen(
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                is RegisterViewModel.UiEvent.SnackbarEvent -> {
+                is UiEvent.SnackbarEvent -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         event.uiText.asString(context),
                         duration = SnackbarDuration.Long

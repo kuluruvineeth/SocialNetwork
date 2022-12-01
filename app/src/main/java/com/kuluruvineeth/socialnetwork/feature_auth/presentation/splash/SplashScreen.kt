@@ -15,17 +15,22 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.scale
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.core.util.Constants
+import com.kuluruvineeth.socialnetwork.feature_auth.presentation.splash.SplashViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 
 @Composable
 fun SplashScreen(
     navController: NavController,
-    dispatcher: CoroutineDispatcher = Dispatchers.Main
+    dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    viewModel: SplashViewModel = hiltViewModel()
 ){
     val scale = remember{
         Animatable(0f)
@@ -38,18 +43,25 @@ fun SplashScreen(
             scale.animateTo(
                 targetValue = 0.5f,
                 animationSpec = tween(
-                    durationMillis = 2000,
+                    durationMillis = 500,
                     easing = {
                         overshootInterpolator.getInterpolation(it)
                     }
                 )
             )
-            delay(Constants.SPLASH_SCREEN_DURATION)
-            navController.popBackStack()
-            navController.navigate(Screen.LoginScreen.route)
         }
     }
-
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest {event ->
+            when(event){
+                is UiEvent.Navigate -> {
+                    navController.popBackStack()
+                    navController.navigate(event.route)
+                }
+                else -> Unit
+            }
+        }
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

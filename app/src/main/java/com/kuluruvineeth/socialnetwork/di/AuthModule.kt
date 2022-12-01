@@ -4,12 +4,14 @@ import android.content.SharedPreferences
 import com.kuluruvineeth.socialnetwork.feature_auth.data.remote.AuthApi
 import com.kuluruvineeth.socialnetwork.feature_auth.data.repository.AuthRepositoryImpl
 import com.kuluruvineeth.socialnetwork.feature_auth.domain.repository.AuthRepository
+import com.kuluruvineeth.socialnetwork.feature_auth.domain.use_case.AuthenticateUseCase
 import com.kuluruvineeth.socialnetwork.feature_auth.domain.use_case.LoginUseCase
 import com.kuluruvineeth.socialnetwork.feature_auth.domain.use_case.RegisterUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -21,9 +23,10 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(): AuthApi{
+    fun provideAuthApi(client: OkHttpClient): AuthApi{
         return Retrofit.Builder()
             .baseUrl(AuthApi.BASE_URL)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthApi::class.java)
@@ -37,6 +40,12 @@ object AuthModule {
 
     @Provides
     @Singleton
+    fun provideAuthenticationUseCase(repository: AuthRepository): AuthenticateUseCase{
+        return AuthenticateUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
     fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase{
         return RegisterUseCase(repository)
     }
@@ -46,4 +55,5 @@ object AuthModule {
     fun provideLoginUseCase(repository: AuthRepository): LoginUseCase{
         return LoginUseCase(repository)
     }
+
 }
