@@ -1,13 +1,12 @@
 package com.kuluruvineeth.socialnetwork.feature_post.domain.repository
 
+import androidx.paging.PagingData
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
 
-    suspend fun getPostsForFollows(
-        page: Int = 0,
-        pageSize: Int = Constants.PAGE_SIZE_POSTS
-    ): Resource<List<Post>>
+    val posts: Flow<PagingData<Post>>
 }

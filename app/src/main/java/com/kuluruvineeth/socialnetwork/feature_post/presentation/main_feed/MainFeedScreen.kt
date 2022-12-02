@@ -1,25 +1,45 @@
 package com.kuluruvineeth.socialnetwork.presentation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.kuluruvineeth.socialnetwork.presentation.components.Post
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
 import com.kuluruvineeth.socialnetwork.core.util.Screen
+import com.kuluruvineeth.socialnetwork.feature_post.presentation.main_feed.MainFeedEvent
+import com.kuluruvineeth.socialnetwork.feature_post.presentation.main_feed.MainFeedViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun MainFeedScreen(
-    navController: NavController
+    navController: NavController,
+    scaffoldState: ScaffoldState,
+    viewModel: MainFeedViewModel = hiltViewModel()
 ) {
+    val posts = viewModel.posts.collectAsLazyPagingItems()
+    val state = viewModel.state.value
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -40,19 +60,56 @@ fun MainFeedScreen(
                 )
             }
         })
-        Post(
-            post = com.kuluruvineeth.socialnetwork.core.domain.models.Post(
-                username = "Kuluru Vineeth",
-                imageUrl = "",
-                profilePictureUrl = "",
-                description = "Agririze(Close to my heart) is the passion that i am " + "living with for sure will make it go live by the end of 2023",
-                likeCount = 17,
-                commentCount = 10
-            ),
-            onPostClick = {
-                navController.navigate(Screen.PostDetailScreen.route)
+        Box(modifier = Modifier.fillMaxSize()){
+            if(state.isLoadingFirstTime){
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Center)
+                )
             }
-        )
+            LazyColumn{
+                items(posts){post ->
+                    Post(
+                        post = com.kuluruvineeth.socialnetwork.core.domain.models.Post(
+                            username = post?.username ?: "",
+                            imageUrl = post?.imageUrl ?: "",
+                            profilePictureUrl = post?.profilePictureUrl ?: "",
+                            description = post?.description ?: "",
+                            likeCount = post?.likeCount ?: 0,
+                            commentCount = post?.commentCount ?: 0
+                        ),
+                        onPostClick = {
+                            navController.navigate(Screen.PostDetailScreen.route)
+                        }
+                    )
+                }
+                item {
+                    if(state.isLoadingNewPosts){
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(BottomCenter))
+                    }
+                }
+                posts.apply {
+                    when {
+                        loadState.refresh !is LoadState.Loading -> {
+                            viewModel.onEvent(MainFeedEvent.LoadedPage)
+                        }
+                        loadState.append is LoadState.Loading -> {
+                            viewModel.onEvent(MainFeedEvent.LoadMorePosts)
+                        }
+                        loadState.append  is LoadState.NotLoading -> {
+                            viewModel.onEvent(MainFeedEvent.LoadedPage)
+                        }
+                        loadState.append is LoadState.Error -> {
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Error"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
