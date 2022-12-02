@@ -8,7 +8,7 @@ import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.core.util.SimpleResource
 import com.kuluruvineeth.socialnetwork.core.util.UiText
-import com.kuluruvineeth.socialnetwork.feature_auth.data.remote.AuthApi
+import com.kuluruvineeth.socialnetwork.feature_auth.data.data_source.remote.AuthApi
 import com.kuluruvineeth.socialnetwork.feature_auth.domain.repository.AuthRepository
 import retrofit2.HttpException
 import java.io.IOException

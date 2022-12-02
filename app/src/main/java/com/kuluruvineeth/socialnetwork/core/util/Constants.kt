@@ -8,4 +8,5 @@ object Constants {
 
     const val KEY_JWT_TOKEN = "jwt_token"
     const val SHARED_PREF_NAME = "shared_pref"
+    const val PAGE_SIZE_POSTS = 20
 }

@@ -1,4 +1,4 @@
-package com.kuluruvineeth.socialnetwork.feature_auth.data.remote
+package com.kuluruvineeth.socialnetwork.feature_auth.data.data_source.remote
 
 import com.kuluruvineeth.data.requests.CreateAccountRequest
 import com.kuluruvineeth.data.requests.LoginRequest
