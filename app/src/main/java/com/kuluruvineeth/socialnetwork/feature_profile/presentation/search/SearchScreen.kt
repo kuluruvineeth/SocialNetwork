@@ -23,10 +23,12 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.IconSizeMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.domain.states.StandardTextFieldState
+import com.kuluruvineeth.socialnetwork.core.util.Screen
 
 @Composable
 fun SearchScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     Column(
@@ -40,7 +42,7 @@ fun SearchScreen(
                         color = MaterialTheme.colors.onBackground
                     )
             }, 
-            navController = navController,
+            onNavigateUp = onNavigateUp,
             showBackArrow = true
         )
         Column(
@@ -68,6 +70,7 @@ fun SearchScreen(
                 items(10){
                     UserProfileItem(
                         user = User(
+                            userId = "6127d2001241f332c88eb9a2",
                             profilePictureUrl = "",
                             username = "Kuluru Vineeth",
                             description = "Agririze is my Dream raa anthe....daaani saadinchaali",
@@ -81,6 +84,11 @@ fun SearchScreen(
                                 contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground,
                                 modifier = Modifier.size(IconSizeMedium)
+                            )
+                        },
+                        onItemClick = {
+                            onNavigate(
+                                Screen.ProfileScreen.route + "?userId=6127d2001241f332c88eb9a2"
                             )
                         }
                     )

@@ -20,7 +20,7 @@ fun StandardToolbar(
     navActions: @Composable RowScope.() -> Unit = {},
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavController
+    onNavigateUp: () -> Unit = {}
 ) {
     TopAppBar(
         title = title,
@@ -28,7 +28,7 @@ fun StandardToolbar(
         navigationIcon = if(showBackArrow){
             {
                 IconButton(onClick = {
-                    navController.navigateUp()
+                    onNavigateUp()
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,

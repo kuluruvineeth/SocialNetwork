@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
     scaffoldState: ScaffoldState,
+    onNavigate: (String) -> Unit = {},
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val emailState = viewModel.emailState.value
@@ -41,7 +41,7 @@ fun LoginScreen(
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                is UiEvent.SnackbarEvent -> {
+                is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText.asString(
                             context
@@ -49,7 +49,7 @@ fun LoginScreen(
                     )
                 }
                 is UiEvent.Navigate -> {
-                    navController.navigate(event.route)
+                    onNavigate(event.route)
                 }
             }
         }
@@ -141,7 +141,7 @@ fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .clickable {
-                    navController.navigate(
+                    onNavigate(
                         Screen.RegisterScreen.route
                     )
                 }

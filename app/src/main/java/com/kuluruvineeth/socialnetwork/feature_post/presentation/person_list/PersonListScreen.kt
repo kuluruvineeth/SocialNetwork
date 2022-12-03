@@ -22,7 +22,8 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 
 @Composable
 fun PersonListScreen(
-    navController: NavController
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -35,7 +36,7 @@ fun PersonListScreen(
                     color = MaterialTheme.colors.onBackground
                 )
             },
-            navController = navController,
+            onNavigateUp = onNavigateUp,
             showBackArrow = true
         )
         LazyColumn(
@@ -45,6 +46,7 @@ fun PersonListScreen(
             items(10){
                 UserProfileItem(
                     user = User(
+                        userId = "6127d2001241f332c88eb9a2",
                         profilePictureUrl = "",
                         username = "Kuluru Vineeth",
                         description = "Agririze is my Dream raa anthe....daaani saadinchaali",

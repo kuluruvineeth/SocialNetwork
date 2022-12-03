@@ -49,7 +49,8 @@ import kotlin.random.Random
 
 @Composable
 fun EditProfileScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     viewModel: EditProfileViewModel = hiltViewModel(),
     profilePictureSize: Dp = ProfilePictureSizeLarge
 ) {
@@ -64,7 +65,7 @@ fun EditProfileScreen(
                         color = MaterialTheme.colors.onBackground
                     )
             },
-            navController = navController,
+            onNavigateUp = onNavigateUp,
             showBackArrow = true,
             navActions = {
                 IconButton(onClick = { }) {

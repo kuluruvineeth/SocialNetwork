@@ -28,7 +28,8 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun SplashScreen(
-    navController: NavController,
+    onPopBackStack: () -> Unit = {},
+    onNavigate: (String) -> Unit = {},
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     viewModel: SplashViewModel = hiltViewModel()
 ){
@@ -55,8 +56,8 @@ fun SplashScreen(
         viewModel.eventFlow.collectLatest {event ->
             when(event){
                 is UiEvent.Navigate -> {
-                    navController.popBackStack()
-                    navController.navigate(event.route)
+                    onPopBackStack()
+                    onNavigate(event.route)
                 }
                 else -> Unit
             }

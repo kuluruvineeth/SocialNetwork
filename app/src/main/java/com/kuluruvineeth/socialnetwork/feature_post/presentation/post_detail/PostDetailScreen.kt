@@ -29,13 +29,16 @@ import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
 
 @Composable
 fun PostDetailScreen(
-    navController : NavController,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     post: Post
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        StandardToolbar(navController = navController, title = {
+        StandardToolbar(
+            onNavigateUp = onNavigateUp,
+            title = {
             Text(
                 text = stringResource(id = R.string.your_feed),
                 fontWeight = FontWeight.Bold,

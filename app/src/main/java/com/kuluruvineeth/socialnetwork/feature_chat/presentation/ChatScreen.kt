@@ -11,7 +11,8 @@ import com.kuluruvineeth.socialnetwork.presentation.components.StandardScaffold
 
 @Composable
 fun ChatScreen(
-    navController: NavController
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
