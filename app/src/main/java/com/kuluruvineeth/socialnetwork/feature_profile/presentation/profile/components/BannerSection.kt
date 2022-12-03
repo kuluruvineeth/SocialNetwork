@@ -10,11 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import coil.decode.SvgDecoder
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.core.util.toPx
@@ -70,11 +73,16 @@ fun BannerSection(
                 .align(Alignment.BottomStart)
                 .padding(spaceSmall)
         ) {
-            topSkills.forEach { skillUrl ->
+            topSkills.forEach { skill ->
                 Spacer(modifier = Modifier.width(spaceSmall))
                 Image(
                     painter = rememberImagePainter(
-                        data = skillUrl.imageUrl,
+                        data = skill.imageUrl,
+                        imageLoader = ImageLoader.Builder(LocalContext.current)
+                            .componentRegistry {
+                                               add(SvgDecoder(LocalContext.current))
+                            }
+                            .build(),
                         builder = {
                             crossfade(true)
                         }
