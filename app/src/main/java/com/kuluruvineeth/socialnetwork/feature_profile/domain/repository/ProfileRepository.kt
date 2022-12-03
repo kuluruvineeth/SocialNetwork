@@ -1,11 +1,15 @@
 package com.kuluruvineeth.socialnetwork.feature_profile.domain.repository
 
 import android.net.Uri
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.core.util.SimpleResource
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Profile
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Skill
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UpdateProfileData
+import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
@@ -18,4 +22,6 @@ interface ProfileRepository {
     ): SimpleResource
 
     suspend fun getSkills(): Resource<List<Skill>>
+
+    fun getPostsPaged(userId: String): Flow<PagingData<Post>>
 }

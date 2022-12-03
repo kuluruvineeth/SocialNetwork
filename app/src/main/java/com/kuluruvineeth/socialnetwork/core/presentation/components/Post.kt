@@ -32,6 +32,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.*
@@ -53,9 +54,11 @@ fun Post(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = if(showProfileImage){
-                    ProfilePictureSizeMedium / 2f
-                } else 0.dp)
+                .offset(
+                    y = if (showProfileImage) {
+                        ProfilePictureSizeMedium / 2f
+                    } else 0.dp
+                )
                 .clip(MaterialTheme.shapes.medium)
                 .shadow(5.dp)
                 .background(MediumGray)
@@ -64,7 +67,29 @@ fun Post(
                 }
         ) {
             Image(
-                painter = painterResource(id = R.drawable.bullocks),
+                painter = rememberImagePainter(
+                    data = post.imageUrl,
+                    builder = {
+                        crossfade(true)
+                        listener(
+                            onStart = {_ ->
+                                print("START LOADING IMAGE")
+                            },
+                            onSuccess = {_, _ ->
+                                println("SUCCESS LOADING IMAGE")
+                            },
+                            onCancel = {
+                                println("REQUEST CANCELED")
+                            },
+                            onError = {_,t ->
+                                println("ERROR LOADING IMAGE")
+                                t.printStackTrace()
+                            }
+                        )
+                        error(R.drawable.channelart)
+                        placeholder(R.drawable.bullocks)
+                    }
+                ),
                 contentDescription = "Post Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
@@ -137,7 +162,12 @@ fun Post(
         }
         if(showProfileImage){
             Image(
-                painter = painterResource(id = R.drawable.vineeth),
+                painter = rememberImagePainter(
+                    data = post.profilePictureUrl,
+                    builder = {
+                        crossfade(true)
+                    }
+                ),
                 contentDescription = "Profile picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

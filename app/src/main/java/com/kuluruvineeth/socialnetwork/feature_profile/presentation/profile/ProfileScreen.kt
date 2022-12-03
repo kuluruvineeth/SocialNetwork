@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.paging.compose.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.domain.models.User
@@ -53,6 +55,7 @@ fun ProfileScreen(
     profilePictureSize: Dp = ProfilePictureSize,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val posts = viewModel.posts.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
     var toolbarState = viewModel.toolbarState.value
     //var expandedRatio = viewModel.expandedRatio.value
@@ -153,19 +156,19 @@ fun ProfileScreen(
                     )
                 }
             }
-            items(20){
+            items(posts){post ->
                 Spacer(
                     modifier = Modifier
                         .height(spaceMedium),
                 )
                 Post(
                     post = com.kuluruvineeth.socialnetwork.core.domain.models.Post(
-                        username = "Kuluru Vineeth",
-                        imageUrl = "",
-                        profilePictureUrl = "",
-                        description = "Agririze(Close to my heart) is the passion that i am " + "living with for sure will make it go live by the end of 2023",
-                        likeCount = 17,
-                        commentCount = 10
+                        username = post?.username ?: "",
+                        imageUrl = post?.imageUrl ?: "",
+                        profilePictureUrl = post?.profilePictureUrl ?: "",
+                        description = post?.description ?: "",
+                        likeCount = post?.likeCount ?: 0,
+                        commentCount = post?.commentCount ?: 0
                     ),
                     showProfileImage = false,
                     onPostClick = {

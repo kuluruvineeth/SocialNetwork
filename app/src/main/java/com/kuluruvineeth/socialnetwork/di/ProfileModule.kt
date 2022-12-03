@@ -1,6 +1,7 @@
 package com.kuluruvineeth.socialnetwork.di
 
 import com.google.gson.Gson
+import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.PostApi
 import com.kuluruvineeth.socialnetwork.feature_profile.data.remote.ProfileApi
 import com.kuluruvineeth.socialnetwork.feature_profile.data.repository.ProfileRepositoryImpl
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.repository.ProfileRepository
@@ -32,8 +33,8 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideProfileRepostory(api: ProfileApi,gson: Gson): ProfileRepository {
-        return ProfileRepositoryImpl(api,gson)
+    fun provideProfileRepostory(profileApi: ProfileApi,postApi: PostApi,gson: Gson): ProfileRepository {
+        return ProfileRepositoryImpl(profileApi,postApi,gson)
     }
 
     @Provides
@@ -43,7 +44,8 @@ object ProfileModule {
             getProfile = GetProfileUseCase(repository),
             getSkills = GetSkillsUseCase(repository),
             updateProfile = UpdateProfileUseCase(repository),
-            setSkillSelected = SetSkillSelectedUseCase()
+            setSkillSelected = SetSkillSelectedUseCase(),
+            getPostsForProfile = GetPostsForProfileUseCase(repository)
         )
     }
 }
