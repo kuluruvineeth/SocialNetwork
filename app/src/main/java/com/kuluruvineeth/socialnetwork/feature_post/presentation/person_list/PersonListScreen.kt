@@ -46,8 +46,8 @@ fun PersonListScreen(
             items(10){
                 UserProfileItem(
                     user = User(
-                        userId = "6127d2001241f332c88eb9a2",
-                        profilePictureUrl = "",
+                        userId = "638806ad680a4504a69cc781",
+                        profilePictureUrl = "http://10.0.2.2:8001/profile_pictures/avatar.svg",
                         username = "Kuluru Vineeth",
                         description = "Agririze is my Dream raa anthe....daaani saadinchaali",
                         followerCount = 234,

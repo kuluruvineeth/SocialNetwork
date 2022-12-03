@@ -88,7 +88,7 @@ fun SearchScreen(
                         },
                         onItemClick = {
                             onNavigate(
-                                Screen.ProfileScreen.route + "?userId=6127d2001241f332c88eb9a2"
+                                Screen.ProfileScreen.route + "?userId=638806ad680a4504a69cc781"
                             )
                         }
                     )
