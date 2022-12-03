@@ -146,7 +146,7 @@ fun ProfileScreen(
                         ),
                         isOwnProfile = profile.isOwnProfile,
                         onEditClick = {
-                            onNavigate(Screen.EditProfileScreen.route)
+                            onNavigate(Screen.EditProfileScreen.route + "/${profile.userId}")
                         }
                     )
                 }
@@ -201,7 +201,7 @@ fun ProfileScreen(
                             translationX = (1f - toolbarState.expandedRatio) *
                                     -iconHorizontalCenterLength
                         },
-                    topSkillUrls = profile.topSkillUrls,
+                    topSkills = profile.topSkills,
                     shouldShowGitHub = profile.gitHubUrl != null,
                     shouldShowInstagram = profile.instagramUrl != null,
                     shouldShowLinkedIn = profile.linkedInUrl != null,

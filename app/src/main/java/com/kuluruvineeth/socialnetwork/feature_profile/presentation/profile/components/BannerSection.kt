@@ -18,6 +18,7 @@ import coil.compose.rememberImagePainter
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.core.util.toPx
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Skill
 
 @Composable
 fun BannerSection(
@@ -27,7 +28,7 @@ fun BannerSection(
     leftIconModifier: Modifier = Modifier,
     rightIconModifier: Modifier = Modifier,
     bannerUrl: String? = null,
-    topSkillUrls: List<String> = emptyList(),
+    topSkills: List<Skill> = emptyList(),
     shouldShowGitHub: Boolean = false,
     shouldShowInstagram: Boolean = false,
     shouldShowLinkedIn: Boolean = false,
@@ -69,11 +70,11 @@ fun BannerSection(
                 .align(Alignment.BottomStart)
                 .padding(spaceSmall)
         ) {
-            topSkillUrls.forEach { skillUrl ->
+            topSkills.forEach { skillUrl ->
                 Spacer(modifier = Modifier.width(spaceSmall))
                 Image(
                     painter = rememberImagePainter(
-                        data = skillUrl,
+                        data = skillUrl.imageUrl,
                         builder = {
                             crossfade(true)
                         }

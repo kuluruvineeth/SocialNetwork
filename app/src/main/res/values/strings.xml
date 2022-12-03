@@ -67,4 +67,8 @@
     <string name="error_no_image_picked">Error no image picked</string>
     <string name="error_description_blank">Error description is blank</string>
     <string name="post_created">post created</string>
+    <string name="error_username_empty">error username empty</string>
+    <string name="error_couldnt_load_skills">error couldnt load skills</string>
+    <string name="error_couldnt_load_profile">error couldnt load profile</string>
+    <string name="updated_profile">updated profile</string>
 </resources>
