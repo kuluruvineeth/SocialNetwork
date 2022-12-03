@@ -1,6 +1,7 @@
 package com.kuluruvineeth.socialnetwork.feature_profile.presentation.edit_profile
 
 import android.net.Uri
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Skill
 
 sealed class EditProfileEvent{
     data class EnteredUsername(val value: String): EditProfileEvent()
@@ -12,7 +13,7 @@ sealed class EditProfileEvent{
     data class CropProfilePicture(val uri: Uri?): EditProfileEvent()
     data class CropBannerImage(val uri: Uri?): EditProfileEvent()
 
-    data class SetSkillsSelected(val skill: String, val selected: Boolean): EditProfileEvent()
+    data class SetSkillsSelected(val skill: Skill): EditProfileEvent()
 
     object UpdateProfile: EditProfileEvent()
 }

@@ -116,6 +116,7 @@ class EditProfileViewModel @Inject constructor(
                     _bioState.value = bioState.value.copy(
                         text = profile.bio
                     )
+                    println("Profile top skills: ${profile.topSkills}")
                     _skills.value = _skills.value.copy(
                         selectedSkills = profile.topSkills
                     )
@@ -191,10 +192,35 @@ class EditProfileViewModel @Inject constructor(
                 _bannerUri.value = event.uri
             }
             is EditProfileEvent.SetSkillsSelected -> {
-
+                val result = profileUseCases.setSkillSelected(
+                    selectedSkills = skills.value.selectedSkills,
+                    event.skill
+                )
+                viewModelScope.launch {
+                    when(result){
+                        is Resource.Success -> {
+                            _skills.value = skills.value.copy(
+                                selectedSkills = result.data ?: kotlin.run {
+                                    _eventFlow.emit(UiEvent.ShowSnackbar(UiText.unknownError()))
+                                    return@launch
+                                }
+                            )
+                        }
+                        is Resource.Error -> {
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackbar(
+                                    uiText = result.uiText ?: UiText.unknownError()
+                                )
+                            )
+                        }
+                    }
+                }
             }
             is EditProfileEvent.UpdateProfile -> {
                 updateProfile()
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.NavigateUp)
+                }
             }
         }
     }

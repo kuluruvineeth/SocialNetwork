@@ -4,10 +4,7 @@ import com.google.gson.Gson
 import com.kuluruvineeth.socialnetwork.feature_profile.data.remote.ProfileApi
 import com.kuluruvineeth.socialnetwork.feature_profile.data.repository.ProfileRepositoryImpl
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.repository.ProfileRepository
-import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.GetProfileUseCase
-import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.GetSkillsUseCase
-import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.ProfileUseCases
-import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.UpdateProfileUseCase
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,7 +42,8 @@ object ProfileModule {
         return ProfileUseCases(
             getProfile = GetProfileUseCase(repository),
             getSkills = GetSkillsUseCase(repository),
-            updateProfile = UpdateProfileUseCase(repository)
+            updateProfile = UpdateProfileUseCase(repository),
+            setSkillSelected = SetSkillSelectedUseCase()
         )
     }
 }

@@ -63,12 +63,14 @@
     <string name="oops_something_went_wrong">Oops! Something went wrong. Please try again.</string>
     <string name="success_registration">Successfully registered on account. You can login now</string>
     <string name="error_file_not_found">Oops The file couldn\'t be found</string>
-    <string name="post_image">post image</string>
-    <string name="error_no_image_picked">Error no image picked</string>
-    <string name="error_description_blank">Error description is blank</string>
-    <string name="post_created">post created</string>
-    <string name="error_username_empty">error username empty</string>
-    <string name="error_couldnt_load_skills">error couldnt load skills</string>
-    <string name="error_couldnt_load_profile">error couldnt load profile</string>
-    <string name="updated_profile">updated profile</string>
+    <string name="post_image">Post image</string>
+    <string name="post_created">Successfully created post</string>
+    <string name="error_description_blank">The description can\'t be empty</string>
+    <string name="error_no_image_picked">Please pick a photo</string>
+    <string name="error_couldnt_load_profile">Oops! Couldn\'t load profile.</string>
+    <string name="error_couldnt_load_skills">Oops! Couldn\'t load skills</string>
+    <string name="error_username_empty">The username can\'t be empty.</string>
+    <string name="updated_profile">Successfully updated profile</string>
+    <string name="error_max_skills_selected">You can only have %s top skills at a time</string>
+    <string name="error_invalid_github_url">This is not valid GitHub url</string>
 </resources>
