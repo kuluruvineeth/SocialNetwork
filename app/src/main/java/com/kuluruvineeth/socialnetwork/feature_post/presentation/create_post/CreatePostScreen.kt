@@ -1,5 +1,7 @@
 package com.kuluruvineeth.socialnetwork.feature_post.presentation.create_post
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -32,6 +34,11 @@ fun CreatePostScreen(
     navController: NavController,
     viewModel: CreatePostViewModel = hiltViewModel()
 ) {
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+    ){
+        viewModel.onEvent(CreatePostEvent.PickImage(it))
+    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -61,7 +68,7 @@ fun CreatePostScreen(
                         shape = MaterialTheme.shapes.medium
                     )
                     .clickable {
-
+                        galleryLauncher.launch("image/*")
                     },
                 contentAlignment = Alignment.Center
             ){
@@ -86,14 +93,18 @@ fun CreatePostScreen(
                 singleLine = false,
                 maxLines = 5,
                 onValueChange = {
-                    viewModel.setDescriptionState(
-                        StandardTextFieldState(text = it)
+                    viewModel.onEvent(
+                        CreatePostEvent.EnterDescription(it)
                     )
                 }
             )
             Spacer(modifier = Modifier.height(spaceLarge))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          viewModel.onEvent(
+                              CreatePostEvent.PostImage
+                          )
+                },
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(

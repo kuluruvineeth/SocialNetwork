@@ -3,7 +3,7 @@ package com.kuluruvineeth.socialnetwork.feature_auth.data.data_source.remote
 import com.kuluruvineeth.data.requests.CreateAccountRequest
 import com.kuluruvineeth.data.requests.LoginRequest
 import com.kuluruvineeth.socialnetwork.core.data.dto.response.BasicApiResponse
-import com.kuluruvineeth.socialnetwork.feature_auth.data.dto.response.AuthResponse
+import com.kuluruvineeth.socialnetwork.feature_auth.data.data_source.remote.response.AuthResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
