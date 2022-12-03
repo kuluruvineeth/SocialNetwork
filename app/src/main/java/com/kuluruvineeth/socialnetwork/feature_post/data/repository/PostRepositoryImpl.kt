@@ -34,8 +34,7 @@ import java.io.IOException
 
 class PostRepositoryImpl(
     private val api: PostApi,
-    private val gson: Gson,
-    private val appContext: Context
+    private val gson: Gson
 ) : PostRepository{
 
     override val posts: Flow<PagingData<Post>>
@@ -50,21 +49,7 @@ class PostRepositoryImpl(
         val request = CreatePostRequest(
             description = description
         )
-        val file = withContext(Dispatchers.IO){
-            appContext.contentResolver.openFileDescriptor(imageUri,"r")?.let{fd ->
-                val inputStream = FileInputStream(fd.fileDescriptor)
-                val file = File(
-                    appContext.cacheDir,
-                    appContext.contentResolver.getFileName(imageUri)
-                )
-                val outputStream = FileOutputStream(file)
-                inputStream.copyTo(outputStream)
-                file
-            }
-        } ?: return Resource.Error(
-            uiText = UiText.StringResource(R.string.error_file_not_found),
-            data = null
-        )
+        val file = imageUri.toFile()
         return try {
             val response = api.createPost(
                 postData = MultipartBody.Part

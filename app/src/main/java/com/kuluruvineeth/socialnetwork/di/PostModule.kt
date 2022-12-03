@@ -37,10 +37,9 @@ object PostModule {
     @Singleton
     fun providePostRepository(
         api: PostApi,
-        gson:Gson,
-        @ApplicationContext appContext: Context
+        gson:Gson
     ): PostRepository{
-        return PostRepositoryImpl(api,gson,appContext)
+        return PostRepositoryImpl(api,gson)
     }
 
 
