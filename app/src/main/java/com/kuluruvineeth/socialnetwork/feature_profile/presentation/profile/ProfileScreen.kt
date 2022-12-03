@@ -48,7 +48,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
-    userId: String,
+    userId: String? = null,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     scaffoldState: ScaffoldState,
