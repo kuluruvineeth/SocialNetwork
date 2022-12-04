@@ -3,6 +3,7 @@ package com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote
 import com.kuluruvineeth.data.requests.CreatePostRequest
 import com.kuluruvineeth.socialnetwork.core.data.dto.response.BasicApiResponse
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
+import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.dto.CommentDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -33,6 +34,16 @@ interface PostApi {
         @Part postData: MultipartBody.Part,
         @Part postImage: MultipartBody.Part
     ): BasicApiResponse<Unit>
+
+    @GET("/api/post/details")
+    suspend fun getPostDetails(
+        @Query("postId") postId: String
+    ): BasicApiResponse<Post>
+
+    @GET("/api/comment/get")
+    suspend fun getCommentsForPost(
+        @Query("postId") postId: String
+    ): List<CommentDto>
 
     companion object{
         const val BASE_URL = "http://10.0.2.2:8001/"

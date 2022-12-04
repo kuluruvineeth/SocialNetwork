@@ -2,6 +2,7 @@ package com.kuluruvineeth.socialnetwork.feature_post.domain.repository
 
 import android.net.Uri
 import androidx.paging.PagingData
+import com.kuluruvineeth.socialnetwork.core.domain.models.Comment
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.Resource
@@ -17,4 +18,8 @@ interface PostRepository {
         description: String,
         imageUri: Uri
     ): SimpleResource
+
+    suspend fun getPostDetails(postId: String): Resource<Post>
+
+    suspend fun getCommentsForPost(postId: String): Resource<List<Comment>>
 }

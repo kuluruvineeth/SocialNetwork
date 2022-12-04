@@ -164,6 +164,7 @@ fun ProfileScreen(
                 )
                 Post(
                     post = com.kuluruvineeth.socialnetwork.core.domain.models.Post(
+                        id = post?.id ?: "",
                         username = post?.username ?: "",
                         imageUrl = post?.imageUrl ?: "",
                         profilePictureUrl = post?.profilePictureUrl ?: "",
@@ -173,7 +174,7 @@ fun ProfileScreen(
                     ),
                     showProfileImage = false,
                     onPostClick = {
-                        onNavigate(Screen.PostDetailScreen.route)
+                        onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
                     },
                 )
             }
