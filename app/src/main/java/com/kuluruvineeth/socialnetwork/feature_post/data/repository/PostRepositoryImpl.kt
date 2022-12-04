@@ -19,6 +19,7 @@ import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.core.util.SimpleResource
 import com.kuluruvineeth.socialnetwork.core.util.UiText
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.PostApi
+import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.request.CreateCommentRequest
 import com.kuluruvineeth.socialnetwork.feature_post.data.paging.PostSource
 import com.kuluruvineeth.socialnetwork.feature_post.domain.repository.PostRepository
 import kotlinx.coroutines.Dispatchers
@@ -111,6 +112,32 @@ class PostRepositoryImpl(
                 it.toComment()
             }
             Resource.Success(comments)
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun createComment(postId: String, comment: String): SimpleResource {
+        return try {
+            val response = api.createComment(
+                CreateCommentRequest(
+                    comment = comment,
+                    postId = postId,
+                )
+            )
+            if(response.successful) {
+                Resource.Success(response.data)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+            }
         } catch(e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_couldnt_reach_server)

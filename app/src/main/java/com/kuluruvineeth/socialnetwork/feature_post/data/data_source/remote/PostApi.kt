@@ -4,6 +4,7 @@ import com.kuluruvineeth.data.requests.CreatePostRequest
 import com.kuluruvineeth.socialnetwork.core.data.dto.response.BasicApiResponse
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.dto.CommentDto
+import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.request.CreateCommentRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -44,6 +45,11 @@ interface PostApi {
     suspend fun getCommentsForPost(
         @Query("postId") postId: String
     ): List<CommentDto>
+
+    @POST("/api/comment/create")
+    suspend fun createComment(
+        @Body request: CreateCommentRequest
+    ): BasicApiResponse<Unit>
 
     companion object{
         const val BASE_URL = "http://10.0.2.2:8001/"
