@@ -7,9 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.kuluruvineeth.socialnetwork.core.domain.use_case.GetOwnUserIdUseCase
+import com.kuluruvineeth.socialnetwork.core.domain.util.ParentType
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
+import com.kuluruvineeth.socialnetwork.core.util.Event
 import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.core.util.UiText
+import com.kuluruvineeth.socialnetwork.feature_post.domain.use_case.PostUseCases
+import com.kuluruvineeth.socialnetwork.feature_post.presentation.person_list.PostEvent
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.ProfileUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
+    private val postUseCases: PostUseCases,
     private val getOwnUserId: GetOwnUserIdUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -30,7 +35,7 @@ class ProfileViewModel @Inject constructor(
     private val _state = mutableStateOf(ProfileState())
     val state: State<ProfileState> = _state
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    private val _eventFlow = MutableSharedFlow<Event>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     val posts = profileUseCases.getPostsForProfile(
@@ -53,6 +58,35 @@ class ProfileViewModel @Inject constructor(
         when(event){
             is ProfileEvent.GetProfile -> {
 
+            }
+            is ProfileEvent.LikePost -> {
+                viewModelScope.launch {
+                    toggleLikeForParent(
+                        parentId = event.postId,
+                        isLiked = false
+                    )
+                }
+            }
+        }
+    }
+
+    private fun toggleLikeForParent(
+        parentId: String,
+        isLiked: Boolean
+    ) {
+        viewModelScope.launch {
+            val result = postUseCases.toggleLikeForParent(
+                parentId = parentId,
+                parentType = ParentType.Post.type,
+                isLiked = isLiked
+            )
+            when(result) {
+                is Resource.Success -> {
+                    _eventFlow.emit(PostEvent.OnLiked)
+                }
+                is Resource.Error -> {
+
+                }
             }
         }
     }

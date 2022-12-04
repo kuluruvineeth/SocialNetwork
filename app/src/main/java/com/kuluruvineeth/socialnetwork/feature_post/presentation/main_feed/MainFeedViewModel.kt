@@ -9,12 +9,19 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
+import com.kuluruvineeth.socialnetwork.core.domain.util.ParentType
 import com.kuluruvineeth.socialnetwork.core.util.Constants
+import com.kuluruvineeth.socialnetwork.core.util.Event
+import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.feature_post.data.paging.PostSource
 import com.kuluruvineeth.socialnetwork.feature_post.domain.use_case.GetPostsForFollowsUseCase
 import com.kuluruvineeth.socialnetwork.feature_post.domain.use_case.PostUseCases
+import com.kuluruvineeth.socialnetwork.feature_post.presentation.person_list.PostEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,6 +33,9 @@ class MainFeedViewModel @Inject constructor(
     val state : State<MainFeedState> = _state
 
     val posts = postUseCases.getPostsForFollowsUseCase().cachedIn(viewModelScope)
+
+    private val _eventFlow = MutableSharedFlow<Event>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: MainFeedEvent){
         when(event){
@@ -39,6 +49,30 @@ class MainFeedViewModel @Inject constructor(
                     isLoadingFirstTime = false,
                     isLoadingNewPosts = false
                 )
+            }
+            is MainFeedEvent.LikedPost -> {
+
+            }
+        }
+    }
+
+    private fun toggleLikeForParent(
+        parentId: String,
+        isLiked: Boolean
+    ){
+        viewModelScope.launch {
+            val result = postUseCases.toggleLikeForParent(
+                parentId = parentId,
+                parentType = ParentType.Post.type,
+                isLiked = isLiked
+            )
+            when(result){
+                is Resource.Success -> {
+                    _eventFlow.emit(PostEvent.OnLiked)
+                }
+                is Resource.Error -> {
+
+                }
             }
         }
     }

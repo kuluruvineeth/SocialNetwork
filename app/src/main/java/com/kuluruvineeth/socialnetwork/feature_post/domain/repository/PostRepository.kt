@@ -7,6 +7,7 @@ import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.core.util.SimpleResource
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -28,4 +29,6 @@ interface PostRepository {
     suspend fun likeParent(parentId: String, parentType: Int): SimpleResource
 
     suspend fun unlikeParent(parentId: String, parentType: Int): SimpleResource
+
+    suspend fun getLikesForParent(parentId: String): Resource<List<UserItem>>
 }

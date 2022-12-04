@@ -44,6 +44,7 @@ import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.core.util.toPx
+import com.kuluruvineeth.socialnetwork.feature_post.presentation.person_list.PostEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -112,6 +113,7 @@ fun ProfileScreen(
     }
     val context = LocalContext.current
     LaunchedEffect(key1 = true){
+        viewModel.setExpandedRatio(1f)
         viewModel.getProfile(userId)
         viewModel.eventFlow.collectLatest { event ->
             when(event){
@@ -119,6 +121,9 @@ fun ProfileScreen(
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText.asString(context)
                     )
+                }
+                is PostEvent.OnLiked -> {
+                    posts.refresh()
                 }
             }
         }
@@ -178,6 +183,9 @@ fun ProfileScreen(
                     onPostClick = {
                         onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
                     },
+                    onLikeClick = {
+                        viewModel.onEvent(ProfileEvent.LikePost(post?.id ?: ""))
+                    }
                 )
             }
         }

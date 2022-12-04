@@ -6,6 +6,7 @@ import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.dto.CommentDto
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.request.CreateCommentRequest
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.request.LikeUpdateRequest
+import com.kuluruvineeth.socialnetwork.feature_profile.data.remote.response.UserItemDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -63,6 +64,11 @@ interface PostApi {
         @Query("parentId") parentId: String,
         @Query("parentType") parentType: Int
     ): BasicApiResponse<Unit>
+
+    @GET("/api/like/parent")
+    suspend fun getLikesForParent(
+        @Query("parentId") parentId: String
+    ): List<UserItemDto>
 
     companion object{
         const val BASE_URL = "http://10.0.2.2:8001/"

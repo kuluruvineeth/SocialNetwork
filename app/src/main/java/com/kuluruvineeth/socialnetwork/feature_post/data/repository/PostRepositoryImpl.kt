@@ -23,6 +23,7 @@ import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.requ
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.request.LikeUpdateRequest
 import com.kuluruvineeth.socialnetwork.feature_post.data.paging.PostSource
 import com.kuluruvineeth.socialnetwork.feature_post.domain.repository.PostRepository
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -189,6 +190,23 @@ class PostRepositoryImpl(
                     Resource.Error(UiText.DynamicString(msg))
                 } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
             }
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun getLikesForParent(parentId: String): Resource<List<UserItem>> {
+        return try {
+            val response = api.getLikesForParent(
+                parentId = parentId,
+            )
+            Resource.Success(response.map { it.toUserItem() })
         } catch(e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_couldnt_reach_server)

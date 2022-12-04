@@ -70,15 +70,7 @@ fun SearchScreen(
                 ){
                     items(state.userItems){user ->
                         UserProfileItem(
-                            user = User(
-                                userId = user.userId,
-                                profilePictureUrl = user.profilePictureUrl,
-                                username = user.username,
-                                description = user.bio,
-                                followerCount = 0,
-                                followingCount = 0,
-                                postCount = 0
-                            ),
+                            user = user,
                             actionIcon = {
                                 IconButton(onClick = {
                                     viewModel.onEvent(SearchEvent.ToggleFollowState(user.userId))

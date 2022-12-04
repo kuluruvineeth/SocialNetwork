@@ -20,15 +20,17 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.IconSizeMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.ProfilePictureSize
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserProfileItem(
-    user: User,
+    user: UserItem,
     modifier: Modifier = Modifier,
     actionIcon: @Composable () -> Unit = {},
     onItemClick: () -> Unit = {},
-    onActionItemClick: () -> Unit = {}
+    onActionItemClick: () -> Unit = {},
+    ownUserId: String = ""
 ) {
     Card(
         modifier = modifier,
@@ -62,8 +64,8 @@ fun UserProfileItem(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(0.8f)
                     .padding(horizontal = spaceSmall)
+                    .weight(1f)
             ) {
                 Text(
                     text = user.username,
@@ -73,17 +75,19 @@ fun UserProfileItem(
                 )
                 Spacer(modifier = Modifier.height(spaceSmall))
                 Text(
-                    text = user.description,
+                    text = user.bio,
                     style = MaterialTheme.typography.body2,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
             }
-            IconButton(
-                onClick = onActionItemClick,
-                modifier = Modifier.size(IconSizeMedium)
-            ) {
-                actionIcon()
+            if(user.userId != ownUserId){
+                IconButton(
+                    onClick = onActionItemClick,
+                    modifier = Modifier.size(IconSizeMedium)
+                ) {
+                    actionIcon()
+                }
             }
         }
     }

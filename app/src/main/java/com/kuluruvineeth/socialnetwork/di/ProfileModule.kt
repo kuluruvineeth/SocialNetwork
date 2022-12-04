@@ -39,6 +39,12 @@ object ProfileModule {
 
     @Provides
     @Singleton
+    fun provideToggleFollowForUserUseCase(repository: ProfileRepository): ToggleFollowStateForUserUseCase{
+        return ToggleFollowStateForUserUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
     fun provideProfileUseCases(repository: ProfileRepository): ProfileUseCases{
         return ProfileUseCases(
             getProfile = GetProfileUseCase(repository),
