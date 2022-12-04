@@ -115,10 +115,10 @@ fun PostDetailScreen(
                                         .padding(spaceLarge)
                                 ) {
                                     ActionRow(
-                                        username = "Kuluru Vineeth",
+                                        username = state.post.username,
                                         modifier = Modifier.fillMaxWidth(),
-                                        onLikeClick = { isLiked ->
-
+                                        onLikeClick = {
+                                            viewModel.onEvent(PostDetailEvent.LikePost)
                                         },
                                         onCommentClick = {
 
@@ -126,7 +126,7 @@ fun PostDetailScreen(
                                         onShareClick = {
 
                                         },
-                                        onUsernameClick = { username ->
+                                        onUsernameClick = {
 
                                         }
                                     )
@@ -177,7 +177,10 @@ fun PostDetailScreen(
                             horizontal = spaceLarge,
                             vertical = spaceSmall
                         ),
-                    comment = comment
+                    comment = comment,
+                    onLikeClick = {
+                        viewModel.onEvent(PostDetailEvent.LikeComment(comment.id))
+                    }
                 )
             }
         }

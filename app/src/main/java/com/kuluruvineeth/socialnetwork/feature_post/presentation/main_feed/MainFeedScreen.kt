@@ -76,6 +76,8 @@ fun MainFeedScreen(
                     Post(
                         post = com.kuluruvineeth.socialnetwork.core.domain.models.Post(
                             id = post?.id ?: "",
+                            userId = post?.userId ?: "",
+                            isLiked = post?.isLiked ?: false,
                             username = post?.username ?: "",
                             imageUrl = post?.imageUrl ?: "",
                             profilePictureUrl = post?.profilePictureUrl ?: "",
@@ -85,6 +87,9 @@ fun MainFeedScreen(
                         ),
                         onPostClick = {
                             onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
+                        },
+                        onLikeClick = {
+
                         }
                     )
                 }
