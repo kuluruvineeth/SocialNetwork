@@ -82,7 +82,7 @@ fun BannerSection(
                             .componentRegistry {
                                                add(SvgDecoder(LocalContext.current))
                             }
-                            .build()
+                            .build(),
                     ),
                     contentDescription = null,
                     modifier = Modifier.height(iconSize)

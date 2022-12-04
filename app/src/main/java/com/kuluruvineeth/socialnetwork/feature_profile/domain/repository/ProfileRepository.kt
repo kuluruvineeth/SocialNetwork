@@ -9,6 +9,7 @@ import com.kuluruvineeth.socialnetwork.core.util.SimpleResource
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Profile
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Skill
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UpdateProfileData
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
@@ -23,5 +24,13 @@ interface ProfileRepository {
 
     suspend fun getSkills(): Resource<List<Skill>>
 
+    suspend fun searchUser(query: String): Resource<List<UserItem>>
+
+    suspend fun followUser(userId: String): SimpleResource
+
+    suspend fun unfollowUser(userId: String): SimpleResource
+
     fun getPostsPaged(userId: String): Flow<PagingData<Post>>
+
+
 }

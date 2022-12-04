@@ -24,6 +24,7 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
 fun ProfileHeaderSection(
     modifier: Modifier = Modifier,
     user: User,
+    isFollowing: Boolean = true,
     isOwnProfile: Boolean = true,
     onEditClick : () -> Unit = {}
 ) {
@@ -70,7 +71,11 @@ fun ProfileHeaderSection(
             )
             Spacer(modifier = Modifier.height(spaceLarge))
         }
-        ProfileStats(user=user,isOwnProfile=isOwnProfile)
+        ProfileStats(
+            user=user,
+            isOwnProfile=isOwnProfile,
+            isFollowing = isFollowing
+        )
     }
 
 }

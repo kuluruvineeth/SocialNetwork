@@ -15,9 +15,11 @@ import com.kuluruvineeth.socialnetwork.core.util.UiText
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.PostApi
 import com.kuluruvineeth.socialnetwork.feature_post.data.paging.PostSource
 import com.kuluruvineeth.socialnetwork.feature_profile.data.remote.ProfileApi
+import com.kuluruvineeth.socialnetwork.feature_profile.data.remote.request.FollowUpdateRequest
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Profile
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Skill
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UpdateProfileData
+import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -107,6 +109,69 @@ class ProfileRepositoryImpl(
             Resource.Success(
                 data = response.map { it.toSkill() }
             )
+        }catch (e: IOException){
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        }catch (e: HttpException){
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun searchUser(query: String): Resource<List<UserItem>> {
+        return try {
+            val response = profileApi.searchUser(query)
+            Resource.Success(
+                data = response.map { it.toUserItem() }
+            )
+        }catch (e: IOException){
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        }catch (e: HttpException){
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun followUser(userId: String): SimpleResource {
+        return try {
+            val response = profileApi.followUser(
+                request = FollowUpdateRequest(userId)
+            )
+            if(response.successful){
+                Resource.Success(Unit)
+            }else{
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+            }
+        }catch (e: IOException){
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        }catch (e: HttpException){
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun unfollowUser(userId: String): SimpleResource {
+        return try {
+            val response = profileApi.unfollowUser(
+                userId = userId
+            )
+            if(response.successful){
+                Resource.Success(Unit)
+            }else{
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+            }
         }catch (e: IOException){
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_couldnt_reach_server)

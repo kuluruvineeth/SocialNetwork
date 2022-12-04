@@ -2,7 +2,7 @@ package com.kuluruvineeth.socialnetwork.feature_profile.data.remote.response
 
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
 
-data class UserResponseItem(
+data class UserItemDto(
     val userId: String,
     val username: String,
     val profilePictureUrl: String,
