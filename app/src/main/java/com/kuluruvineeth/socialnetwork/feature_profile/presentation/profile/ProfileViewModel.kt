@@ -69,8 +69,7 @@ class ProfileViewModel @Inject constructor(
             is ProfileEvent.LikePost -> {
                 viewModelScope.launch {
                     toggleLikeForParent(
-                        parentId = event.postId,
-                        isLiked = false
+                        parentId = event.postId
                     )
                 }
             }
@@ -111,21 +110,44 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun toggleLikeForParent(
-        parentId: String,
-        isLiked: Boolean
+        parentId: String
     ) {
         viewModelScope.launch {
+            val post = pagingState.value.items.find { it.id == parentId }
+            val currentlyLiked = post?.isLiked == true
+            val currentLikeCount = post?.likeCount ?: 0
+            val newPosts = pagingState.value.items.map { post ->
+                if(post.id == parentId){
+                    post.copy(
+                        isLiked = !post.isLiked,
+                        likeCount = if(currentlyLiked){
+                            post.likeCount - 1
+                        }else post.likeCount + 1
+                    )
+                }else post
+            }
             val result = postUseCases.toggleLikeForParent(
                 parentId = parentId,
                 parentType = ParentType.Post.type,
-                isLiked = isLiked
+                isLiked = currentlyLiked
+            )
+            _pagingState.value = pagingState.value.copy(
+                items = newPosts
             )
             when(result) {
-                is Resource.Success -> {
-                    _eventFlow.emit(PostEvent.OnLiked)
-                }
+                is Resource.Success -> Unit
                 is Resource.Error -> {
-
+                    val oldPosts = pagingState.value.items.map { post ->
+                        if(post.id == parentId){
+                            post.copy(
+                                isLiked = currentlyLiked,
+                                likeCount = currentLikeCount
+                            )
+                        }else post
+                    }
+                    _pagingState.value = pagingState.value.copy(
+                        items = oldPosts
+                    )
                 }
             }
         }

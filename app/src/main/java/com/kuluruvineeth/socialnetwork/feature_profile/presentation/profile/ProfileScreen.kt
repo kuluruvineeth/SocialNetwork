@@ -167,10 +167,6 @@ fun ProfileScreen(
                 if(i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading){
                     viewModel.loadNextPosts()
                 }
-                Spacer(
-                    modifier = Modifier
-                        .height(spaceMedium),
-                )
                 Post(
                     post = post,
                     showProfileImage = false,
@@ -181,6 +177,9 @@ fun ProfileScreen(
                         viewModel.onEvent(ProfileEvent.LikePost(post.id))
                     }
                 )
+            }
+            item { 
+                Spacer(modifier = Modifier.height(90.dp))
             }
         }
 
