@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.domain.models.User
@@ -49,6 +50,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
+    imageLoader: ImageLoader,
     userId: String? = null,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
@@ -169,6 +171,7 @@ fun ProfileScreen(
                 }
                 Post(
                     post = post,
+                    imageLoader = imageLoader,
                     showProfileImage = false,
                     onPostClick = {
                         onNavigate(Screen.PostDetailScreen.route + "/${post.id}")
@@ -214,6 +217,7 @@ fun ProfileScreen(
                             translationX = (1f - toolbarState.expandedRatio) *
                                     -iconHorizontalCenterLength
                         },
+                    imageLoader = imageLoader,
                     topSkills = profile.topSkills,
                     shouldShowGitHub = profile.gitHubUrl != null && profile.gitHubUrl.isNotBlank(),
                     shouldShowInstagram = profile.instagramUrl != null && profile.instagramUrl.isNotBlank(),
@@ -221,7 +225,10 @@ fun ProfileScreen(
                     bannerUrl = profile.bannerUrl
                 )
                 Image(
-                    painter = rememberImagePainter(data = profile.profilePictureUrl),
+                    painter = rememberImagePainter(
+                        data = profile.profilePictureUrl,
+                        imageLoader = imageLoader
+                    ),
                     contentDescription = stringResource(id = R.string.profile_image),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

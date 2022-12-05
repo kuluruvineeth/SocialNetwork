@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import coil.ImageLoader
 import com.kuluruvineeth.socialnetwork.presentation.components.Post
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
@@ -35,6 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainFeedScreen(
+    imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     scaffoldState: ScaffoldState,
@@ -84,6 +86,7 @@ fun MainFeedScreen(
                     }
                     Post(
                         post = post,
+                        imageLoader = imageLoader,
                         onUsernameClick = {
                             onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}")
                         },

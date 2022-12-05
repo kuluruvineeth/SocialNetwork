@@ -7,10 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import coil.ImageLoader
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardScaffold
 
 @Composable
 fun ChatScreen(
+    imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {}
 ) {
