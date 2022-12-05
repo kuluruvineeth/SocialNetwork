@@ -42,7 +42,14 @@ fun Navigation(
         composable(Screen.LoginScreen.route){
             LoginScreen(
                 onNavigate = navController::navigate,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                onLogin = {
+                    navController.popBackStack(
+                        route = Screen.LoginScreen.route,
+                        inclusive = true
+                    )
+                    navController.navigate(route = Screen.MainFeedScreen.route)
+                }
             )
         }
         composable(Screen.RegisterScreen.route){
@@ -78,7 +85,9 @@ fun Navigation(
         ){
             ProfileScreen(
                 userId = it.arguments?.getString("userId"),
-                onNavigateUp = navController::navigateUp,
+                onLogout = {
+                           navController.navigate(route = Screen.LoginScreen.route)
+                },
                 onNavigate = navController::navigate,
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader

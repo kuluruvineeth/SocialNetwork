@@ -1,5 +1,6 @@
 package com.kuluruvineeth.socialnetwork.di
 
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.PostApi
 import com.kuluruvineeth.socialnetwork.feature_profile.data.remote.ProfileApi
@@ -33,8 +34,8 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideProfileRepostory(profileApi: ProfileApi,postApi: PostApi,gson: Gson): ProfileRepository {
-        return ProfileRepositoryImpl(profileApi,postApi,gson)
+    fun provideProfileRepostory(profileApi: ProfileApi,postApi: PostApi,gson: Gson,sharedPreferences: SharedPreferences): ProfileRepository {
+        return ProfileRepositoryImpl(profileApi,postApi,gson,sharedPreferences)
     }
 
     @Provides
@@ -53,7 +54,8 @@ object ProfileModule {
             setSkillSelected = SetSkillSelectedUseCase(),
             getPostsForProfile = GetPostsForProfileUseCase(repository),
             searchUser = SearchUserUseCase(repository),
-            toggleFollowStateForUser = ToggleFollowStateForUserUseCase(repository)
+            toggleFollowStateForUser = ToggleFollowStateForUserUseCase(repository),
+            logout = LogoutUseCase(repository)
         )
     }
 }

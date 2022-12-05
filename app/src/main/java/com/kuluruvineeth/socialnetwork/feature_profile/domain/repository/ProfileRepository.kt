@@ -37,5 +37,5 @@ interface ProfileRepository {
         userId: String
     ): Resource<List<Post>>
 
-
+    fun logout()
 }
