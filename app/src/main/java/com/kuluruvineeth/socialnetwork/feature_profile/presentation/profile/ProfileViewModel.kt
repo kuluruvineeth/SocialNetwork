@@ -6,8 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.domain.use_case.GetOwnUserIdUseCase
 import com.kuluruvineeth.socialnetwork.core.domain.util.ParentType
+import com.kuluruvineeth.socialnetwork.core.presentation.PagingState
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.util.Event
 import com.kuluruvineeth.socialnetwork.core.util.Resource
@@ -19,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +29,7 @@ class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
     private val postUseCases: PostUseCases,
     private val getOwnUserId: GetOwnUserIdUseCase,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _toolbarState = mutableStateOf<ProfileToolbarState>(ProfileToolbarState())
@@ -38,9 +41,9 @@ class ProfileViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<Event>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    val posts = profileUseCases.getPostsForProfile(
-        savedStateHandle.get<String>("userId") ?: getOwnUserId()
-    ).cachedIn(viewModelScope)
+    private var page = 0
+    private val _pagingState = mutableStateOf<PagingState<Post>>(PagingState())
+    val pagingState: State<PagingState<Post>> = _pagingState
 
     fun setExpandedRatio(ratio: Float){
         _toolbarState.value = _toolbarState.value.copy(
@@ -54,6 +57,10 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
+    init {
+        loadNextPosts()
+    }
+
     fun onEvent(event: ProfileEvent){
         when(event){
             is ProfileEvent.GetProfile -> {
@@ -64,6 +71,39 @@ class ProfileViewModel @Inject constructor(
                     toggleLikeForParent(
                         parentId = event.postId,
                         isLiked = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun loadNextPosts(){
+        viewModelScope.launch {
+            _pagingState.value = pagingState.value.copy(
+                isLoading = true
+            )
+            val userId = savedStateHandle.get<String>("userId") ?: getOwnUserId()
+            val result = profileUseCases.getPostsForProfile(
+                userId = userId,
+                page = page
+            )
+            when(result){
+                is Resource.Success -> {
+                    val posts = result.data ?: emptyList()
+                    _pagingState.value = pagingState.value.copy(
+                        items = pagingState.value.items + posts,
+                        endReached = posts.isEmpty(),
+                        isLoading = false
+                    )
+                    page++
+                    Timber.d("Paging state changed to ${pagingState.value}")
+                }
+                is Resource.Error -> {
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar(result.uiText ?: UiText.unknownError())
+                    )
+                    _pagingState.value = pagingState.value.copy(
+                        isLoading = false
                     )
                 }
             }

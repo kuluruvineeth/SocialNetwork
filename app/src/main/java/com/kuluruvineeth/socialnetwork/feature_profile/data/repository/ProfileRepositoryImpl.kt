@@ -183,9 +183,26 @@ class ProfileRepositoryImpl(
         }
     }
 
-    override fun getPostsPaged(userId: String): Flow<PagingData<Post>>{
-        return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)){
-            PostSource(postApi, PostSource.Source.Profile(userId))
-        }.flow
+    override suspend fun getPostsPaged(
+        page: Int,
+        pageSize: Int,
+        userId: String
+    ): Resource<List<Post>>{
+        return try{
+            val posts = postApi.getPostsForProfile(
+                userId = userId,
+                page = page,
+                pageSize = pageSize
+            )
+            Resource.Success(data = posts)
+        }catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
     }
 }

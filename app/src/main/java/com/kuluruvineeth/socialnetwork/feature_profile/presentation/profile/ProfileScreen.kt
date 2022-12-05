@@ -56,7 +56,7 @@ fun ProfileScreen(
     profilePictureSize: Dp = ProfilePictureSize,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val posts = viewModel.posts.collectAsLazyPagingItems()
+    val pagingState = viewModel.pagingState.value
     val lazyListState = rememberLazyListState()
     var toolbarState = viewModel.toolbarState.value
     //var expandedRatio = viewModel.expandedRatio.value
@@ -123,7 +123,7 @@ fun ProfileScreen(
                     )
                 }
                 is PostEvent.OnLiked -> {
-                    posts.refresh()
+
                 }
             }
         }
@@ -162,29 +162,23 @@ fun ProfileScreen(
                     )
                 }
             }
-            items(posts){post ->
+            items(pagingState.items.size){i ->
+                val post = pagingState.items[i]
+                if(i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading){
+                    viewModel.loadNextPosts()
+                }
                 Spacer(
                     modifier = Modifier
                         .height(spaceMedium),
                 )
                 Post(
-                    post = com.kuluruvineeth.socialnetwork.core.domain.models.Post(
-                        id = post?.id ?: "",
-                        userId = post?.userId ?: "",
-                        isLiked = post?.isLiked ?: false,
-                        username = post?.username ?: "",
-                        imageUrl = post?.imageUrl ?: "",
-                        profilePictureUrl = post?.profilePictureUrl ?: "",
-                        description = post?.description ?: "",
-                        likeCount = post?.likeCount ?: 0,
-                        commentCount = post?.commentCount ?: 0
-                    ),
+                    post = post,
                     showProfileImage = false,
                     onPostClick = {
-                        onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
+                        onNavigate(Screen.PostDetailScreen.route + "/${post.id}")
                     },
                     onLikeClick = {
-                        viewModel.onEvent(ProfileEvent.LikePost(post?.id ?: ""))
+                        viewModel.onEvent(ProfileEvent.LikePost(post.id))
                     }
                 )
             }

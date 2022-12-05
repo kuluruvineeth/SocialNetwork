@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
+import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.Resource
 import com.kuluruvineeth.socialnetwork.core.util.SimpleResource
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.Profile
@@ -30,7 +31,11 @@ interface ProfileRepository {
 
     suspend fun unfollowUser(userId: String): SimpleResource
 
-    fun getPostsPaged(userId: String): Flow<PagingData<Post>>
+    suspend fun getPostsPaged(
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_PAGE_SIZE,
+        userId: String
+    ): Resource<List<Post>>
 
 
 }
