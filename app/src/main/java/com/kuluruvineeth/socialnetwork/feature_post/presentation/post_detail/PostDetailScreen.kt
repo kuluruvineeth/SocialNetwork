@@ -145,7 +145,7 @@ fun PostDetailScreen(
 
                                         },
                                         onUsernameClick = {
-
+                                            onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}")
                                         }
                                     )
                                     Spacer(modifier = Modifier.height(spaceSmall))
