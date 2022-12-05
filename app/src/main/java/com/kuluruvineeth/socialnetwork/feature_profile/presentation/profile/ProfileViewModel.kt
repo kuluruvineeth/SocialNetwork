@@ -11,9 +11,7 @@ import com.kuluruvineeth.socialnetwork.core.domain.use_case.GetOwnUserIdUseCase
 import com.kuluruvineeth.socialnetwork.core.domain.util.ParentType
 import com.kuluruvineeth.socialnetwork.core.presentation.PagingState
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
-import com.kuluruvineeth.socialnetwork.core.util.Event
-import com.kuluruvineeth.socialnetwork.core.util.Resource
-import com.kuluruvineeth.socialnetwork.core.util.UiText
+import com.kuluruvineeth.socialnetwork.core.util.*
 import com.kuluruvineeth.socialnetwork.feature_post.domain.use_case.PostUseCases
 import com.kuluruvineeth.socialnetwork.feature_post.presentation.person_list.PostEvent
 import com.kuluruvineeth.socialnetwork.feature_profile.domain.use_case.ProfileUseCases
@@ -29,7 +27,8 @@ class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
     private val postUseCases: PostUseCases,
     private val getOwnUserId: GetOwnUserIdUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val postLiker: PostLiker
 ) : ViewModel() {
 
     private val _toolbarState = mutableStateOf<ProfileToolbarState>(ProfileToolbarState())
@@ -44,6 +43,31 @@ class ProfileViewModel @Inject constructor(
     private var page = 0
     private val _pagingState = mutableStateOf<PagingState<Post>>(PagingState())
     val pagingState: State<PagingState<Post>> = _pagingState
+
+    private val paginator = DefaultPaginator(
+        onLoadUpdated = { isLoading ->
+            _pagingState.value = pagingState.value.copy(
+                isLoading = isLoading
+            )
+        },
+        onRequest = { page ->
+            val userId = savedStateHandle.get<String>("userId") ?: getOwnUserId()
+            profileUseCases.getPostsForProfile(
+                userId = userId,
+                page = page
+            )
+        },
+        onSuccess = { posts ->
+            _pagingState.value = pagingState.value.copy(
+                items = pagingState.value.items + posts,
+                endReached = posts.isEmpty(),
+                isLoading = false
+            )
+        },
+        onError = { uiText ->
+            _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
+        }
+    )
 
     fun setExpandedRatio(ratio: Float){
         _toolbarState.value = _toolbarState.value.copy(
@@ -78,34 +102,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loadNextPosts(){
         viewModelScope.launch {
-            _pagingState.value = pagingState.value.copy(
-                isLoading = true
-            )
-            val userId = savedStateHandle.get<String>("userId") ?: getOwnUserId()
-            val result = profileUseCases.getPostsForProfile(
-                userId = userId,
-                page = page
-            )
-            when(result){
-                is Resource.Success -> {
-                    val posts = result.data ?: emptyList()
-                    _pagingState.value = pagingState.value.copy(
-                        items = pagingState.value.items + posts,
-                        endReached = posts.isEmpty(),
-                        isLoading = false
-                    )
-                    page++
-                    Timber.d("Paging state changed to ${pagingState.value}")
-                }
-                is Resource.Error -> {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar(result.uiText ?: UiText.unknownError())
-                    )
-                    _pagingState.value = pagingState.value.copy(
-                        isLoading = false
-                    )
-                }
-            }
+            paginator.loadNextItems()
         }
     }
 
@@ -113,43 +110,22 @@ class ProfileViewModel @Inject constructor(
         parentId: String
     ) {
         viewModelScope.launch {
-            val post = pagingState.value.items.find { it.id == parentId }
-            val currentlyLiked = post?.isLiked == true
-            val currentLikeCount = post?.likeCount ?: 0
-            val newPosts = pagingState.value.items.map { post ->
-                if(post.id == parentId){
-                    post.copy(
-                        isLiked = !post.isLiked,
-                        likeCount = if(currentlyLiked){
-                            post.likeCount - 1
-                        }else post.likeCount + 1
-                    )
-                }else post
-            }
-            val result = postUseCases.toggleLikeForParent(
+            postLiker.toggleLike(
+                posts = pagingState.value.items,
                 parentId = parentId,
-                parentType = ParentType.Post.type,
-                isLiked = currentlyLiked
-            )
-            _pagingState.value = pagingState.value.copy(
-                items = newPosts
-            )
-            when(result) {
-                is Resource.Success -> Unit
-                is Resource.Error -> {
-                    val oldPosts = pagingState.value.items.map { post ->
-                        if(post.id == parentId){
-                            post.copy(
-                                isLiked = currentlyLiked,
-                                likeCount = currentLikeCount
-                            )
-                        }else post
-                    }
+                onRequest = {isLiked ->
+                    postUseCases.toggleLikeForParent(
+                        parentId = parentId,
+                        parentType = ParentType.Post.type,
+                        isLiked = isLiked
+                    )
+                },
+                onStateUpdated = {posts ->
                     _pagingState.value = pagingState.value.copy(
-                        items = oldPosts
+                        items = posts
                     )
                 }
-            }
+            )
         }
     }
 

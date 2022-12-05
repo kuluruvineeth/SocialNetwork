@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.kuluruvineeth.socialnetwork.core.domain.use_case.GetOwnUserIdUseCase
 import com.kuluruvineeth.socialnetwork.core.util.Constants
+import com.kuluruvineeth.socialnetwork.core.util.DefaultPostLiker
+import com.kuluruvineeth.socialnetwork.core.util.PostLiker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +27,12 @@ object AppModule {
             Constants.SHARED_PREF_NAME,
             MODE_PRIVATE
         )
+    }
+
+    @Provides
+    @Singleton
+    fun providePostLiker(): PostLiker{
+        return DefaultPostLiker()
     }
 
     @Provides
