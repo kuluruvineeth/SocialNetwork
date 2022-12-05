@@ -23,6 +23,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.kuluruvineeth.socialnetwork.presentation.components.Post
 import com.kuluruvineeth.socialnetwork.R
+import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.feature_post.presentation.main_feed.MainFeedEvent
@@ -86,10 +87,18 @@ fun MainFeedScreen(
                         onPostClick = {
                             onNavigate(Screen.PostDetailScreen.route + "/${post.id}")
                         },
+                        onCommentClick = {
+                            onNavigate(Screen.PostDetailScreen.route + "/${post.id}?shouldShowKeyboard=true")
+                        },
                         onLikeClick = {
                             viewModel.onEvent(MainFeedEvent.LikedPost(post.id))
                         }
                     )
+                    if(i < pagingState.items.size - 1){
+                        Spacer(modifier = Modifier.height(spaceLarge))
+                    }
+                }
+                item {
                     Spacer(modifier = Modifier.height(90.dp))
                 }
             }

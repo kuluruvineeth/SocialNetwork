@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,6 +35,7 @@ import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.*
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
+import com.kuluruvineeth.socialnetwork.core.presentation.util.showKeyboard
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.presentation.components.ActionRow
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardTextField
@@ -44,13 +47,22 @@ fun PostDetailScreen(
     scaffoldState: ScaffoldState,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    viewModel: PostDetailViewModel = hiltViewModel()
+    viewModel: PostDetailViewModel = hiltViewModel(),
+    shouldShowKeyboard: Boolean = false
 ) {
     val state = viewModel.state.value
     val commentTextFieldState = viewModel.commentTextFieldState.value
 
+    val focusRequester = remember {
+        FocusRequester()
+    }
+
     val context = LocalContext.current
     LaunchedEffect(key1 = true){
+        if(shouldShowKeyboard){
+            context.showKeyboard()
+            focusRequester.requestFocus()
+        }
         viewModel.eventFlow.collectLatest { event ->
             when(event){
                 is UiEvent.ShowSnackbar -> {
@@ -108,9 +120,11 @@ fun PostDetailScreen(
                                             crossfade(true)
                                         }
                                     ),
+                                    contentScale = ContentScale.Crop,
                                     contentDescription = "Post image",
-                                    modifier = Modifier.fillMaxWidth()
-                                        .aspectRatio(16f/9f)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(16f / 9f)
                                 )
                                 Column(
                                     modifier = Modifier
@@ -124,7 +138,8 @@ fun PostDetailScreen(
                                             viewModel.onEvent(PostDetailEvent.LikePost)
                                         },
                                         onCommentClick = {
-
+                                            context.showKeyboard()
+                                            focusRequester.requestFocus()
                                         },
                                         onShareClick = {
 
@@ -208,7 +223,8 @@ fun PostDetailScreen(
                 backgroundColor = MaterialTheme.colors.background,
                 modifier = Modifier
                     .weight(1f),
-                hint = stringResource(id = R.string.enter_a_comment)
+                hint = stringResource(id = R.string.enter_a_comment),
+                focusRequester = focusRequester
             )
             if(viewModel.commentState.value.isLoading) {
                 CircularProgressIndicator(
