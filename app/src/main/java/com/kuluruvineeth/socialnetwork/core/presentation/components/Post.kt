@@ -88,7 +88,7 @@ fun Post(
                     .padding(spaceMedium)
             ) {
                 ActionRow(
-                    username = "Kuluru Vineeth",
+                    username = post.username,
                     modifier = Modifier.fillMaxWidth(),
                     isLiked = post.isLiked,
                     onLikeClick = onLikeClick,
