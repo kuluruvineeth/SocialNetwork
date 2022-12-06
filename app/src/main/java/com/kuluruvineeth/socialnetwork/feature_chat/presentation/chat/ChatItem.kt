@@ -50,7 +50,7 @@ fun ChatItem(
         ) {
             Image(
                 painter = rememberImagePainter(
-                    data = item.remoteUserProfileUrl,
+                    data = item.remoteUserProfilePictureUrl,
                     imageLoader = imageLoader
                 ),
                 contentDescription = null,
@@ -75,7 +75,7 @@ fun ChatItem(
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(spaceSmall))
-                    Text(text = item.lastMessageFormattedTime)
+                    Text(text = item.timestamp.toString())
                 }
                 Spacer(modifier = Modifier.height(spaceSmall))
                 Text(

@@ -1,4 +1,4 @@
-package com.kuluruvineeth.socialnetwork.feature_chat.data.remote.ws.util
+package com.kuluruvineeth.socialnetwork.feature_chat.data.remote.util
 
 import com.tinder.scarlet.Stream
 import com.tinder.scarlet.StreamAdapter

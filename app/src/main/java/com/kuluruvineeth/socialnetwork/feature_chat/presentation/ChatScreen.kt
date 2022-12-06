@@ -9,42 +9,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.compose.foundation.lazy.items
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import coil.ImageLoader
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.feature_chat.domain.model.Chat
 import com.kuluruvineeth.socialnetwork.feature_chat.presentation.chat.ChatItem
+import com.kuluruvineeth.socialnetwork.feature_chat.presentation.chat.ChatViewModel
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardScaffold
 
 @Composable
 fun ChatScreen(
     imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
-    onNavigateUp: () -> Unit = {}
+    onNavigateUp: () -> Unit = {},
+    viewModel: ChatViewModel = hiltViewModel()
 ) {
-    val chats = remember {
-        listOf(
-            Chat(
-                remoteUsername = "Kuluru Vineeth",
-                remoteUserProfileUrl = "http://192.168.0.2:8001/profile_pictures/philipp.jpg",
-                lastMessage = "This is the last message of the chat with Philipp",
-                lastMessageFormattedTime = "19:39"
-            ),
-            Chat(
-                remoteUsername = "Florian",
-                remoteUserProfileUrl = "http://192.168.0.2:8001/profile_pictures/philipp.jpg",
-                lastMessage = "This is the last message of the chat with Philipp",
-                lastMessageFormattedTime = "19:39"
-            ),
-            Chat(
-                remoteUsername = "Kuluru Vineeth",
-                remoteUserProfileUrl = "http://192.168.0.2:8001/profile_pictures/philipp.jpg",
-                lastMessage = "This is the last message of the chat with Philipp",
-                lastMessageFormattedTime = "19:39"
-            ),
-        )
-    }
+    val chats = viewModel.state.value.chats
+    val isLoading = viewModel.state.value.isLoading
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +43,7 @@ fun ChatScreen(
                     item = chat,
                     imageLoader = imageLoader,
                     onItemClick = {
-                        onNavigate(Screen.MessageScreen.route)
+                        onNavigate(Screen.MessageScreen.route + "/${chat.chatId}/${chat.remoteUserId}")
                     }
                 )
                 Spacer(modifier = Modifier.height(spaceLarge))
