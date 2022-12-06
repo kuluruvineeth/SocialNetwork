@@ -1,43 +1,41 @@
-package com.kuluruvineeth.socialnetwork.presentation.components
+package com.kuluruvineeth.socialnetwork.feature_chat.presentation.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
-import com.kuluruvineeth.socialnetwork.core.domain.models.User
-import com.kuluruvineeth.socialnetwork.R
-import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.IconSizeMedium
-import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.ProfilePictureSize
+import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.ProfilePictureSizeSmall
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
-import com.kuluruvineeth.socialnetwork.feature_profile.domain.model.UserItem
+import com.kuluruvineeth.socialnetwork.feature_chat.domain.model.Chat
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun UserProfileItem(
-    user: UserItem,
+fun ChatItem(
+    item: Chat,
     imageLoader: ImageLoader,
     modifier: Modifier = Modifier,
-    actionIcon: @Composable () -> Unit = {},
-    onItemClick: () -> Unit = {},
-    onActionItemClick: () -> Unit = {},
-    ownUserId: String = ""
+    onItemClick: (Chat) -> Unit,
 ) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        onClick = onItemClick,
+        onClick = {
+            onItemClick(item)
+        },
         elevation = 5.dp
     ) {
         Row(
@@ -52,13 +50,12 @@ fun UserProfileItem(
         ) {
             Image(
                 painter = rememberImagePainter(
-                    data = user.profilePictureUrl,
+                    data = item.remoteUserProfileUrl,
                     imageLoader = imageLoader
                 ),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(ProfilePictureSize)
+                    .size(ProfilePictureSizeSmall)
                     .clip(CircleShape)
             )
             Column(
@@ -67,30 +64,29 @@ fun UserProfileItem(
                     .padding(horizontal = spaceSmall)
                     .weight(1f)
             ) {
-                Text(
-                    text = user.username,
-                    style = MaterialTheme.typography.body1.copy(
-                        fontWeight = FontWeight.Bold
+                Row(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = item.remoteUsername,
+                        style = MaterialTheme.typography.body1.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.weight(1f)
                     )
-                )
+                    Spacer(modifier = Modifier.width(spaceSmall))
+                    Text(text = item.lastMessageFormattedTime)
+                }
                 Spacer(modifier = Modifier.height(spaceSmall))
                 Text(
-                    text = user.bio,
+                    text = item.lastMessage,
                     style = MaterialTheme.typography.body2,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2,
                     modifier = Modifier.heightIn(
-                        min = MaterialTheme.typography.body2.fontSize.value.dp * 3f
+                        min = MaterialTheme.typography.body2.fontSize.value.dp * 2.5f
                     )
                 )
-            }
-            if(user.userId != ownUserId){
-                IconButton(
-                    onClick = onActionItemClick,
-                    modifier = Modifier.size(IconSizeMedium)
-                ) {
-                    actionIcon()
-                }
             }
         }
     }

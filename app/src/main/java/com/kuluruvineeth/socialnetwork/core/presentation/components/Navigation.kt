@@ -22,6 +22,7 @@ import com.kuluruvineeth.socialnetwork.feature_auth.presentation.login.LoginScre
 import com.kuluruvineeth.socialnetwork.feature_post.presentation.post_detail.PostDetailScreen
 import com.kuluruvineeth.socialnetwork.feature_profile.presentation.profile.ProfileScreen
 import com.kuluruvineeth.socialnetwork.feature_auth.presentation.register.RegisterScreen
+import com.kuluruvineeth.socialnetwork.feature_chat.presentation.message.MessageScreen
 import com.kuluruvineeth.socialnetwork.feature_profile.presentation.search.SearchScreen
 import com.kuluruvineeth.socialnetwork.presentation.splash.SplashScreen
 
@@ -70,6 +71,14 @@ fun Navigation(
         }
         composable(Screen.ChatScreen.route){
             ChatScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
+            )
+        }
+        composable(Screen.MessageScreen.route){
+            MessageScreen(
+                chatId = "",
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader
