@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import coil.ImageLoader
 import com.kuluruvineeth.socialnetwork.presentation.components.Post
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceLarge
+import com.kuluruvineeth.socialnetwork.core.presentation.util.sendSharePostIntent
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.feature_post.presentation.main_feed.MainFeedEvent
@@ -44,6 +46,7 @@ fun MainFeedScreen(
 ) {
     val pagingState = viewModel.pagingState.value
 
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -98,6 +101,9 @@ fun MainFeedScreen(
                         },
                         onLikeClick = {
                             viewModel.onEvent(MainFeedEvent.LikedPost(post.id))
+                        },
+                        onShareClick = {
+                            context.sendSharePostIntent(post.id)
                         }
                     )
                     if(i < pagingState.items.size - 1){

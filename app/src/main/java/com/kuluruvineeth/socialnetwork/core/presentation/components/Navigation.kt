@@ -1,5 +1,6 @@
 package com.kuluruvineeth.socialnetwork.presentation.util
 
+import android.content.Intent
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -7,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
+import androidx.navigation.navDeepLink
 import coil.ImageLoader
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.util.Screen
@@ -158,9 +160,16 @@ fun Navigation(
                     type = NavType.BoolType
                     defaultValue = false
                 }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    action = Intent.ACTION_VIEW
+                    uriPattern = "https://pl-coding.com/{postId}"
+                }
             )
         ){
             val shouldShowKeyboard = it.arguments?.getBoolean("shouldShowKeyboard") ?: false
+            println("POST ID: ${it.arguments?.getString("postId")}")
             PostDetailScreen(
                 scaffoldState = scaffoldState,
                 onNavigateUp = navController::navigateUp,

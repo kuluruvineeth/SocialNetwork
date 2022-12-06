@@ -36,6 +36,7 @@ import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.*
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
+import com.kuluruvineeth.socialnetwork.core.presentation.util.sendSharePostIntent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.showKeyboard
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.presentation.components.ActionRow
@@ -142,7 +143,7 @@ fun PostDetailScreen(
                                             focusRequester.requestFocus()
                                         },
                                         onShareClick = {
-
+                                            context.sendSharePostIntent(post.id)
                                         },
                                         onUsernameClick = {
                                             onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}")

@@ -48,6 +48,7 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
+import com.kuluruvineeth.socialnetwork.core.presentation.util.sendSharePostIntent
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.core.util.toPx
 import com.kuluruvineeth.socialnetwork.feature_post.presentation.person_list.PostEvent
@@ -189,6 +190,9 @@ fun ProfileScreen(
                     },
                     onLikeClick = {
                         viewModel.onEvent(ProfileEvent.LikePost(post.id))
+                    },
+                    onShareClick = {
+                        context.sendSharePostIntent(post.id)
                     }
                 )
             }
