@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
@@ -50,7 +51,8 @@ fun Post(
     onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
-    onUsernameClick: () -> Unit = {}
+    onUsernameClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -94,7 +96,8 @@ fun Post(
                     onLikeClick = onLikeClick,
                     onCommentClick = onCommentClick,
                     onShareClick = onShareClick,
-                    onUsernameClick = onUsernameClick
+                    onUsernameClick = onUsernameClick,
+                    onDeleteClick = onDeleteClick
                 )
                 Spacer(modifier = Modifier.height(spaceSmall))
                 Text(
@@ -165,6 +168,7 @@ fun EngagementButtons(
     onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -213,6 +217,16 @@ fun EngagementButtons(
                 contentDescription = stringResource(id = R.string.share)
             )
         }
+        Spacer(modifier = Modifier.width(spaceMedium))
+        IconButton(
+            onClick = onDeleteClick,
+            modifier = Modifier.size(iconSize)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(id = R.string.delete_post)
+            )
+        }
     }
     
 }
@@ -225,7 +239,8 @@ fun ActionRow(
     onCommentClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
     username: String,
-    onUsernameClick: () -> Unit = {}
+    onUsernameClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {}
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -247,7 +262,8 @@ fun ActionRow(
             isLiked = isLiked,
             onLikeClick = onLikeClick,
             onCommentClick = onCommentClick,
-            onShareClick = onShareClick
+            onShareClick = onShareClick,
+            onDeleteClick = onDeleteClick
         )
     }
 }

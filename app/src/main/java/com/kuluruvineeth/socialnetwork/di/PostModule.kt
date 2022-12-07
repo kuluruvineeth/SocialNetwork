@@ -2,6 +2,7 @@ package com.kuluruvineeth.socialnetwork.di
 
 import android.content.Context
 import com.google.gson.Gson
+import com.kuluruvineeth.socialnetwork.core.domain.use_case.DeletePost
 import com.kuluruvineeth.socialnetwork.feature_post.data.data_source.remote.PostApi
 import com.kuluruvineeth.socialnetwork.feature_post.data.repository.PostRepositoryImpl
 import com.kuluruvineeth.socialnetwork.feature_post.domain.repository.PostRepository
@@ -51,7 +52,8 @@ object PostModule {
             getCommentsForPost = GetCommentsForPostUseCase(repository),
             createComment = CreateCommentUseCase(repository),
             toggleLikeForParent = ToggleLikeForParentUseCase(repository),
-            getLikesForParent = GetLikesForParentUseCase(repository)
+            getLikesForParent = GetLikesForParentUseCase(repository),
+            deletePost = DeletePost(repository)
         )
     }
 }

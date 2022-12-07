@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.domain.models.Post
 import com.kuluruvineeth.socialnetwork.core.domain.use_case.GetOwnUserIdUseCase
 import com.kuluruvineeth.socialnetwork.core.domain.util.ParentType
@@ -104,6 +105,33 @@ class ProfileViewModel @Inject constructor(
                 viewModelScope.launch {
                     toggleLikeForParent(
                         parentId = event.postId
+                    )
+                }
+            }
+            is ProfileEvent.DeletePost -> {
+                deletePost(event.post.id)
+            }
+        }
+    }
+
+    private fun deletePost(postId: String) {
+        viewModelScope.launch {
+            when(val result = postUseCases.deletePost(postId)) {
+                is Resource.Success -> {
+                    _pagingState.value = pagingState.value.copy(
+                        items = pagingState.value.items.filter {
+                            it.id != postId
+                        }
+                    )
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar(UiText.StringResource(
+                            R.string.successfully_deleted_post
+                        ))
+                    )
+                }
+                is Resource.Error -> {
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar(result.uiText ?: UiText.unknownError())
                     )
                 }
             }
