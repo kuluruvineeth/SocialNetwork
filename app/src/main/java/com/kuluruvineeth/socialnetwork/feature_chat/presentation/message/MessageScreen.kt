@@ -12,9 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collect
 import coil.ImageLoader
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import coil.compose.rememberImagePainter
 import com.kuluruvineeth.socialnetwork.R
 import com.kuluruvineeth.socialnetwork.core.presentation.components.SendTextField
@@ -25,9 +30,11 @@ import com.kuluruvineeth.socialnetwork.feature_chat.domain.model.Message
 import com.kuluruvineeth.socialnetwork.feature_chat.presentation.message.components.OwnMessage
 import com.kuluruvineeth.socialnetwork.feature_chat.presentation.message.components.RemoteMessage
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
+import kotlinx.coroutines.InternalCoroutinesApi
 import okio.ByteString.Companion.decodeBase64
 import java.nio.charset.Charset
 
+@OptIn(ExperimentalComposeUiApi::class, InternalCoroutinesApi::class)
 @Composable
 fun MessageScreen(
     remoteUserId: String,
@@ -42,7 +49,24 @@ fun MessageScreen(
         encodedRemoteUserProfilePictureUrl.decodeBase64()?.string(Charset.defaultCharset())
     }
     val pagingState = viewModel.pagingState.value
-
+    val lazyListState = rememberLazyListState()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(key1 = pagingState, key2 = keyboardController){
+        viewModel.messageReceived.collect{event ->
+            when(event){
+                is MessageViewModel.MessageUpdateEvent.SingleMessageUpdate,
+                is MessageViewModel.MessageUpdateEvent.MessagePageLoaded -> {
+                    if(pagingState.items.isEmpty()){
+                        return@collect
+                    }
+                    lazyListState.scrollToItem(pagingState.items.size - 1)
+                }
+                is MessageViewModel.MessageUpdateEvent.MessageSent -> {
+                    keyboardController?.hide()
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -72,6 +96,7 @@ fun MessageScreen(
             modifier = Modifier.weight(1f)
         ) {
             LazyColumn(
+                state = lazyListState,
                 modifier = Modifier
                     .weight(1f)
                     .padding(spaceMedium)
