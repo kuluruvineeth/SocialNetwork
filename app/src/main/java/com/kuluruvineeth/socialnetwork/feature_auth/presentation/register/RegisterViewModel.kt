@@ -40,6 +40,9 @@ class RegisterViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    private val _onRegister = MutableSharedFlow<Unit>(replay = 1)
+    val onRegister = _onRegister.asSharedFlow()
+
     fun onEvent(event: RegisterEvent){
         when(event){
             is RegisterEvent.EnteredUsername -> {
@@ -99,6 +102,7 @@ class RegisterViewModel @Inject constructor(
                     _eventFlow.emit(
                         UiEvent.ShowSnackbar(UiText.StringResource(R.string.success_registration))
                     )
+                    _onRegister.emit(Unit)
                     _registerState.value = RegisterState(isLoading = false)
                     _usernameState.value = StandardTextFieldState()
                     _emailState.value = StandardTextFieldState()

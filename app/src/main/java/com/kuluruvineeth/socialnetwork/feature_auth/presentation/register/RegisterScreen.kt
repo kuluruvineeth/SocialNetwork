@@ -28,13 +28,16 @@ import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
 import com.kuluruvineeth.socialnetwork.core.util.Constants
 import com.kuluruvineeth.socialnetwork.core.util.UiText
 import com.kuluruvineeth.socialnetwork.feature_auth.presentation.util.AuthError
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, InternalCoroutinesApi::class)
 @Composable
 fun RegisterScreen(
     navController: NavController,
     scaffoldState: ScaffoldState,
+    onPopBackStack: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val usernameState = viewModel.usernameState.value
@@ -43,6 +46,12 @@ fun RegisterScreen(
     val registerState = viewModel.registerState.value
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(key1 = true){
+        viewModel.onRegister.collect{
+            onPopBackStack()
+        }
+    }
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){

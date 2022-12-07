@@ -61,7 +61,8 @@ fun Navigation(
         composable(Screen.RegisterScreen.route){
             RegisterScreen(
                 navController = navController,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                onPopBackStack = navController::popBackStack
             )
         }
         composable(Screen.MainFeedScreen.route){
