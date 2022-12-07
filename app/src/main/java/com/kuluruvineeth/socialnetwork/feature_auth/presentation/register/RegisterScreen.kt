@@ -6,8 +6,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,6 +30,7 @@ import com.kuluruvineeth.socialnetwork.core.util.UiText
 import com.kuluruvineeth.socialnetwork.feature_auth.presentation.util.AuthError
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     navController: NavController,
@@ -38,10 +42,12 @@ fun RegisterScreen(
     val passwordState = viewModel.passwordState.value
     val registerState = viewModel.registerState.value
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
                 is UiEvent.ShowSnackbar -> {
+                    keyboardController?.hide()
                     scaffoldState.snackbarHostState.showSnackbar(
                         event.uiText.asString(context),
                         duration = SnackbarDuration.Long
@@ -151,7 +157,9 @@ fun RegisterScreen(
                 )
             }
             if(registerState.isLoading){
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier.align(CenterHorizontally)
+                )
             }
         }
         Text(
