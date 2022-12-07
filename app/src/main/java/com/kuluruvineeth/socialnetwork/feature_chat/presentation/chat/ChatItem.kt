@@ -20,6 +20,8 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.ProfilePicture
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.feature_chat.domain.model.Chat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -75,7 +77,10 @@ fun ChatItem(
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(spaceSmall))
-                    Text(text = item.timestamp.toString())
+                    Text(
+                        text = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault())
+                            .format(item.timestamp)
+                    )
                 }
                 Spacer(modifier = Modifier.height(spaceSmall))
                 Text(
