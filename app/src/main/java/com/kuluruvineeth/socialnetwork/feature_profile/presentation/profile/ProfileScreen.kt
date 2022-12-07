@@ -49,6 +49,7 @@ import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceMedium
 import com.kuluruvineeth.socialnetwork.core.presentation.ui.theme.spaceSmall
 import com.kuluruvineeth.socialnetwork.core.presentation.util.UiEvent
 import com.kuluruvineeth.socialnetwork.core.presentation.util.asString
+import com.kuluruvineeth.socialnetwork.core.presentation.util.openUrlInBrowser
 import com.kuluruvineeth.socialnetwork.core.presentation.util.sendSharePostIntent
 import com.kuluruvineeth.socialnetwork.core.util.Screen
 import com.kuluruvineeth.socialnetwork.core.util.toPx
@@ -246,7 +247,16 @@ fun ProfileScreen(
                     shouldShowGitHub = profile.gitHubUrl != null && profile.gitHubUrl.isNotBlank(),
                     shouldShowInstagram = profile.instagramUrl != null && profile.instagramUrl.isNotBlank(),
                     shouldShowLinkedIn = profile.linkedInUrl != null && profile.linkedInUrl.isNotBlank(),
-                    bannerUrl = profile.bannerUrl
+                    bannerUrl = profile.bannerUrl,
+                    onGithubClick = {
+                        context.openUrlInBrowser(profile.gitHubUrl ?: return@BannerSection)
+                    },
+                    onKotlinClick = {
+                        context.openUrlInBrowser(profile.instagramUrl ?: return@BannerSection)
+                    },
+                    onLinkedInClick = {
+                        context.openUrlInBrowser(profile.linkedInUrl ?: return@BannerSection)
+                    }
                 )
                 Image(
                     painter = rememberImagePainter(
