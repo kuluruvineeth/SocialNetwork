@@ -14,8 +14,8 @@ object ScarletInstance {
 
     var current: ChatService? = null
 
-    fun init(client: OkHttpClient){
-        Scarlet.Builder()
+    fun getNewInstance(client: OkHttpClient): ChatService{
+        return Scarlet.Builder()
             .addMessageAdapterFactory(CustomGsonMessageAdapter.Factory(Gson()))
             .addStreamAdapterFactory(CoroutinesStreamAdapterFactory())
             .webSocketFactory(
