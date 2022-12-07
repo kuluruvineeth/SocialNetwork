@@ -25,40 +25,23 @@ import com.kuluruvineeth.socialnetwork.feature_chat.domain.model.Message
 import com.kuluruvineeth.socialnetwork.feature_chat.presentation.message.components.OwnMessage
 import com.kuluruvineeth.socialnetwork.feature_chat.presentation.message.components.RemoteMessage
 import com.kuluruvineeth.socialnetwork.presentation.components.StandardToolbar
+import okio.ByteString.Companion.decodeBase64
+import java.nio.charset.Charset
 
 @Composable
 fun MessageScreen(
-    chatId: String,
+    remoteUserId: String,
+    remoteUsername: String,
+    encodedRemoteUserProfilePictureUrl: String,
     imageLoader: ImageLoader,
     onNavigateUp: () -> Unit = {},
     onNavigate: (String) -> Unit = {},
     viewModel: MessageViewModel = hiltViewModel()
 ) {
-    val messages = remember {
-        listOf(
-            Message(
-                fromId = "",
-                toId = "",
-                text = "Hello World!",
-                formattedTime = "19:34",
-                chatId = "",
-            ),
-            Message(
-                fromId = "",
-                toId = "",
-                text = "Hello World!",
-                formattedTime = "19:34",
-                chatId = "",
-            ),
-            Message(
-                fromId = "",
-                toId = "",
-                text = "Hello World!",
-                formattedTime = "19:34",
-                chatId = "",
-            ),
-        )
+    val decodeRemoteUserProfilePictureUrl = remember {
+        encodedRemoteUserProfilePictureUrl.decodeBase64()?.string(Charset.defaultCharset())
     }
+    val pagingState = viewModel.pagingState.value
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -69,7 +52,7 @@ fun MessageScreen(
             title = {
                 Image(
                     painter = rememberImagePainter(
-                        data = "http://192.168.0.2:8001/profile_pictures/2d9d19dd-eb6b-4e51-957d-1381c4a28024.jpg",
+                        data = decodeRemoteUserProfilePictureUrl,
                         imageLoader = imageLoader
                     ),
                     contentDescription = null,
@@ -79,7 +62,7 @@ fun MessageScreen(
                 )
                 Spacer(modifier = Modifier.width(spaceMedium))
                 Text(
-                    text = "Kuluru",
+                    text = remoteUsername,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.onBackground
                 )
@@ -93,20 +76,28 @@ fun MessageScreen(
                     .weight(1f)
                     .padding(spaceMedium)
             ) {
-                items(messages) { message ->
-                    RemoteMessage(
-                        message = message.text,
-                        formattedTime = message.formattedTime,
-                        color = MaterialTheme.colors.surface,
-                        textColor = MaterialTheme.colors.onBackground
-                    )
-                    Spacer(modifier = Modifier.height(spaceMedium))
-                    OwnMessage(
-                        message = message.text,
-                        formattedTime = message.formattedTime,
-                        color = DarkerGreen,
-                        textColor = MaterialTheme.colors.onBackground
-                    )
+                items(pagingState.items.size) { i ->
+                    val message = pagingState.items[i]
+                    if(i>= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading){
+                        viewModel.loadNextMessages()
+                    }
+                    if(message.fromId == remoteUserId){
+                        RemoteMessage(
+                            message = message.text,
+                            formattedTime = message.formattedTime,
+                            color = MaterialTheme.colors.surface,
+                            textColor = MaterialTheme.colors.onBackground
+                        )
+                        Spacer(modifier = Modifier.height(spaceMedium))
+                    }else{
+                        OwnMessage(
+                            message = message.text,
+                            formattedTime = message.formattedTime,
+                            color = DarkerGreen,
+                            textColor = MaterialTheme.colors.onBackground
+                        )
+                        Spacer(modifier = Modifier.height(spaceMedium))
+                    }
                     Spacer(modifier = Modifier.height(spaceMedium))
                 }
             }

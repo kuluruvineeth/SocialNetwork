@@ -15,4 +15,6 @@ interface ChatRepository {
     fun observeMessages(): Flow<Message>
 
     fun sendMessage(toId: String, text: String, chatId: String?)
+
+    suspend fun getMessagesForChat(chatId: String,page:Int,pageSize:Int): Resource<List<Message>>
 }

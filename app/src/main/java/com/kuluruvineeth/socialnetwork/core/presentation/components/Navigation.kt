@@ -1,8 +1,10 @@
 package com.kuluruvineeth.socialnetwork.presentation.util
 
 import android.content.Intent
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -34,7 +36,8 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route
+        startDestination = Screen.SplashScreen.route,
+        modifier = Modifier.fillMaxSize()
     ){
         composable(Screen.SplashScreen.route){
             SplashScreen(
@@ -77,20 +80,32 @@ fun Navigation(
             )
         }
         composable(
-            route = Screen.MessageScreen.route + "/{chatId}/{remoteUserId}",
+            route = Screen.MessageScreen.route + "/{remoteUserId}/{remoteUsername}/{remoteUserProfilePictureUrl}?chatId={chatId}",
             arguments = listOf(
                 navArgument(
                     name = "chatId"
                 ){
                     type = NavType.StringType
+                    nullable = true
                 },
                 navArgument("remoteUserId"){
+                    type = NavType.StringType
+                },
+                navArgument("remoteUsername"){
+                    type = NavType.StringType
+                },
+                navArgument("remoteUserProfilePictureUrl"){
                     type = NavType.StringType
                 }
             )
         ){
+            val remoteUserId = it.arguments?.getString("remoteUserId")!!
+            val remoteUsername = it.arguments?.getString("remoteUsername")!!
+            val remoteUserProfilePictureUrl = it.arguments?.getString("remoteUserProfilePictureUrl")!!
             MessageScreen(
-                chatId = "",
+                remoteUserId = remoteUserId,
+                remoteUsername = remoteUsername,
+                encodedRemoteUserProfilePictureUrl = remoteUserProfilePictureUrl,
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader
